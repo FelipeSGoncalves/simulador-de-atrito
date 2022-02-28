@@ -264,6 +264,23 @@ start();
     gameFrame++;
     requestAnimationFrame(animate);
 } 
+
+
+    function calculandoF Fisica(){
+        const RAPIDEZ = ;
+        const ACELERAÇÂO = ;
+        const ATRITO = ;
+        const MASSA = ;
+        const FORÇA_RESULTANTE = ;
+        const GRAVIDADE = ;
+
+        ACELERAÇÂO = FORÇA_RESULTANTE / MASSA;
+        if(FORÇA_RESULTANTE > ATRITO){
+            ACELERAÇÃO++;
+        }else{
+            ACELERAÇÃO -= 0;
+        }
+    };
  */
 
 
