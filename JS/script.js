@@ -1,12 +1,106 @@
 /** @type {HTMLCanvasElement} */
 
+window.addEventListener('load', function(){
 canvas = document.getElementById("canvas");
 ctx = canvas.getContext("2d");
 
 const LARGURA_CANVAS = canvas.width = 520;
 const ALTURA_CANVAS = canvas.height = 250;
 
-let gameSpeed =  0;
+    class InputHandler{
+        constructor(){
+            this.keys = [];
+            window.addEventListener('keydown', e =>{
+                if((e.key === 'ArrowDown' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'ArrowRight')
+                && this.keys.indexOf(e.key) === -1){
+                    this.keys.push(e.key);
+                }
+            });
+            window.addEventListener('keyup', e =>{
+            if( e.key === 'ArrowDown' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'ArrowRight'){
+                    this.keys.splice(this.keys.indexOf(e.key), 1);
+                }
+            });
+        }
+    }
+
+class Player{
+    constructor(gameWidth, gameHeight){
+        this.gameWidth = gameWidth;
+        this.gameHeight = gameHeight;
+        this.width = 50;
+        this.height = 50;
+        this.x = 0;
+        this.y = this.gameHeight - this.height;
+        this.image = document.getElementById('playerImage');
+        this.Framex = 0;
+        this.Framey= 0;
+        this.speed = 0;
+        this.vy =0;
+        this.weight = 1;
+    }
+    draw(context){
+        context.fillStyle = 'white';
+        context.fillRect(this.x, this.y, this.width, this. height);
+        context.drawImage(this.image, this.Framex * this.width, this.Framey * this.height,
+        this.width, this.height , this.x, this.y, this.width, this.height);
+    }
+    update(input){
+        if(input.keys.indexOf('ArrowRight') > -1){
+            this.speed = 5;
+        }else if(input.keys.indexOf('ArrowLeft') > -1){
+            this.speed = -5;
+        }else if(input.keys.indexOf('ArrowUp') > -1 && this.onGround()){
+                this.vy -= 15;
+        }else{
+            this.speed = 0;
+        }
+
+        this.x += this.speed;
+        if(this.x < 0) this.x=0;
+        else if (this.x > this.gameWidth - this.width) this.x = this.gameWidth - this.width;
+
+        this.y += this.vy;
+
+        if(!this.onGround()){
+            this.vy += this.weight;
+            this.Framey = 2;
+        }else{
+            this.vy = 0;
+            this.Framey = 0;
+        }
+        if (this.y > this.gameHeight - this.height) this.y = this.gameHeight - this.height;
+ 
+    }
+    onGround(){
+        return this.y >= this.gameHeight - this.height;
+    }
+}
+
+class background{
+
+}
+
+const input = new InputHandler();
+const player = new Player(LARGURA_CANVAS, ALTURA_CANVAS);
+
+function animate(){
+    ctx.clearRect(0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
+    player.draw(ctx);
+    player.update(input);
+    requestAnimationFrame(animate);
+}
+animate();
+
+});
+
+/**let gameSpeed =  0;
 
 const backgroundLayer1 = new Image();
 backgroundLayer1.src = '../IMG/background.png';
@@ -20,6 +114,8 @@ class Layer{
     constructor(image, speedModifier){
         this.x = 0;
         this.y = 0;
+        this.speed = 0;
+        this.speedModifier = 0;
         this.width = 520;
         this.height = 250;
         this.x2 = this.width;
@@ -28,6 +124,7 @@ class Layer{
         this.speed = gameSpeed * this.speedModifier;
     }
     update(){
+        this.speed = 0;
         this.speed = gameSpeed * this.speedModifier;
         if(this.x <= -this.width){
             this.x = this.width + this.x2 - this.speed;
@@ -41,6 +138,7 @@ class Layer{
     draw(){
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+        
     }
 
 }
@@ -61,7 +159,25 @@ function animate(){
     
     requestAnimationFrame(animate);
 };
-animate();
+
+function KeyDown(evt){
+    gameSpeed = 0;
+    switch (evt.keyCode) {
+        case 37: //esquerda
+            gameSpeed = 0;
+            break;
+        case 39:  //direita
+            gameSpeed++;
+            animate();
+            break;
+
+        default:
+            break;
+    }
+}
+
+    window.addEventListener('keydown', KeyDown, true);
+*/
 /** 
 const POSICAO_HORIZONTAL = 0;
 const POSICAO_VERTICAL = 0;
@@ -149,6 +265,7 @@ start();
     requestAnimationFrame(animate);
 } 
  */
+
 
 
 

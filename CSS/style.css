@@ -3,12 +3,15 @@ body{
 }
 
 canvas{
-    border: 3px solid white;
     position: absolute;
     width: 520px;
     height: 250px;
-    transform: translate(-50%, -50%);
     top: 50%;
     left: 50%;
-    
+    transform: translate(-50%, -50%);
+    border: 3px solid white;
+}
+
+#playerImage, #backgroundImage{
+    display: none;
 }
