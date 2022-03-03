@@ -1,17 +1,18 @@
 body{
-    background: black;
+    background: white;
 }
 
 canvas{
     position: absolute;
-    width: 520px;
-    height: 250px;
+    width: 90% ;
+    height: 90%;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: 3px solid white;
+    border: 5px groove black;   
+    
 }
 
-#playerImage, #backgroundImage{
+#backgroundImage, #floorImage, #robotImage, #boxImage, #towerImage{
     display: none;
 }

@@ -1,21 +1,36 @@
 /** @type {HTMLCanvasElement} */
 
 window.addEventListener('load', function(){
-canvas = document.getElementById("canvas");
-ctx = canvas.getContext("2d");
+    /*
+    function calculandoAtrito(miEstatico, massa, gravidade){
+        forcaDeAtritoMax = miEstatico * massa * gravidade;
+      
+    }
 
-const LARGURA_CANVAS = canvas.width = 520;
-const ALTURA_CANVAS = canvas.height = 250;
+    function calculandoAceleracao(forcaDeAtritoMax, FORÇA_RESULTANTE, massa){
+        aceleracao = FORÇA_RESULTANTE / massa;
+        if(FORÇA_RESULTANTE > forcaDeAtritoMax){
+            gameSpeed = aceleracao;
+        }else{
+            aceleracao -= 0;
+        }
+    };
+    */
+    canvas = document.getElementById("canvas");
+    ctx = canvas.getContext("2d");
+
+    const CANVAS_WIDTH = canvas.width = window.screen.width;
+    const CANVAS_HEIGHT = canvas.height = window.screen.height;
 
     class InputHandler{
         constructor(){
             this.keys = [];
             window.addEventListener('keydown', e =>{
                 if((e.key === 'ArrowDown' ||
-                e.key === 'ArrowUp' ||
-                e.key === 'ArrowLeft' ||
-                e.key === 'ArrowRight')
-                && this.keys.indexOf(e.key) === -1){
+                    e.key === 'ArrowUp' ||
+                    e.key === 'ArrowLeft' ||
+                    e.key === 'ArrowRight')
+                    && this.keys.indexOf(e.key) === -1){
                     this.keys.push(e.key);
                 }
             });
@@ -30,74 +45,139 @@ const ALTURA_CANVAS = canvas.height = 250;
         }
     }
 
-class Player{
-    constructor(gameWidth, gameHeight){
-        this.gameWidth = gameWidth;
-        this.gameHeight = gameHeight;
-        this.width = 50;
-        this.height = 50;
-        this.x = 0;
-        this.y = this.gameHeight - this.height;
-        this.image = document.getElementById('playerImage');
-        this.Framex = 0;
-        this.Framey= 0;
-        this.speed = 0;
-        this.vy =0;
-        this.weight = 1;
-    }
-    draw(context){
-        context.fillStyle = 'white';
-        context.fillRect(this.x, this.y, this.width, this. height);
-        context.drawImage(this.image, this.Framex * this.width, this.Framey * this.height,
-        this.width, this.height , this.x, this.y, this.width, this.height);
-    }
-    update(input){
-        if(input.keys.indexOf('ArrowRight') > -1){
-            this.speed = 5;
-        }else if(input.keys.indexOf('ArrowLeft') > -1){
-            this.speed = -5;
-        }else if(input.keys.indexOf('ArrowUp') > -1 && this.onGround()){
+    class Robot{
+        constructor(gameWidth, gameHeight){
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.width = 100;
+            this.height = 100;
+            this.x = 0;
+            this.y = 155;
+            this.image = document.getElementById('robotImage');
+            this.Framex = 0;
+            this.Framey= 0;
+            this.speed = 0;
+            this.vy =0;
+            this.weight = 1;
+            this.tempo = 0;
+        }
+        draw(context){
+            context.fillStyle = 'transparent';
+            context.fillRect(this.x, this.y, this.width, this. height);
+            context.drawImage(this.image, this.Framex * this.width, this.Framey * this.height,
+            this.width, this.height , this.x, this.y, this.width, this.height);
+        }
+        update(input){
+            if(input.keys.indexOf('ArrowRight') > -1){
+                this.speed = 5;
+                if(this.tempo <= 4){
+                    this.Framex++;
+                }else{
+                    this.Framex--;
+                }
+                
+            }else if(input.keys.indexOf('ArrowLeft') > -1){
+                this.speed = -5;
+            }else if(input.keys.indexOf('ArrowUp') > -1 && this.onGround()){
                 this.vy -= 15;
-        }else{
+            }else{
+                this.speed = 0;
+                this.Framex = 0;
+            }
+            this.x += this.speed;
+        
+            if(this.x < 0){
+                this.x=0;
+            }else if (this.x > this.gameWidth - this.width){
+                this.x = this.gameWidth - this.width;
+            }
+            this.y += this.vy;
+            
+            if(!this.onGround()){
+                this.vy += this.weight;
+                this.Framey = 2;
+            }else{
+                this.vy = 0;
+                this.Framey = 0;
+            }
+            if (this.y > this.gameHeight - this.height){
+                this.y = this.gameHeight - this.height;
+            }
+        }
+        onGround(){
+            return this.y >= this.gameHeight - this.height;
+        }
+    }
+
+    class Box{
+        constructor(gameWidth, gameHeight){
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.width = 200;
+            this.height = 200;
+            this.x = CANVAS_WIDTH / 2 - 25;
+            this.y = 530;
+            this.image = document.getElementById('boxImage');
+            this.Framex = 0;
+            this.Framey= 0;
             this.speed = 0;
         }
-
-        this.x += this.speed;
-        if(this.x < 0) this.x=0;
-        else if (this.x > this.gameWidth - this.width) this.x = this.gameWidth - this.width;
-
-        this.y += this.vy;
-
-        if(!this.onGround()){
-            this.vy += this.weight;
-            this.Framey = 2;
-        }else{
-            this.vy = 0;
-            this.Framey = 0;
+        draw(context){
+            context.fillStyle = 'white';
+            context.fillRect(this.x, this.y, this.width, this. height);
+            context.drawImage(this.image, this.Framex * this.width, this.Framey * this.height,
+            this.width, this.height , this.x, this.y, this.width, this.height);
         }
-        if (this.y > this.gameHeight - this.height) this.y = this.gameHeight - this.height;
- 
     }
-    onGround(){
-        return this.y >= this.gameHeight - this.height;
-    }
-}
+    class Background{
+        constructor(gameWidth, gameHeight){
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.image = document.getElementById('backgroundImage')
+            this.x = 0;
+            this.y = 0;
+            this.width = CANVAS_WIDTH; 
+            this.height = CANVAS_HEIGHT;
+        }
+        draw(context){
+            context.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
+    } 
+    /*class Tower{
+        constructor(gameWidth, gameHeight)
+    } 
+    */
+    class Floor{
+        constructor(gameWidth, gameHeight){
+            this.gameWidth = gameWidth;
+            this.gameHeight = gameHeight;
+            this.image = document.getElementById('floorImage')
+            this.x = 0;
+            this.y = 0;
+            this.width = CANVAS_WIDTH;
+            this.height = CANVAS_HEIGHT;
+        }
+        draw(context){
+            context.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
+    }   
 
-class background{
+    const input = new InputHandler();
+    const background = new Background(CANVAS_WIDTH, this.CANVAS_HEIGHT);
+    const floor = new Floor(CANVAS_WIDTH, this.CANVAS_HEIGHT);
+    const robot = new Robot(CANVAS_WIDTH, CANVAS_HEIGHT);
+    const box = new Box(CANVAS_WIDTH, CANVAS_HEIGHT);
 
-}
-
-const input = new InputHandler();
-const player = new Player(LARGURA_CANVAS, ALTURA_CANVAS);
-
-function animate(){
-    ctx.clearRect(0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
-    player.draw(ctx);
-    player.update(input);
-    requestAnimationFrame(animate);
-}
-animate();
-
+    function animate(){
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        background.draw(ctx);
+        floor.draw(ctx);
+        robot.draw(ctx);
+        robot.update(input);
+        box.draw(ctx);
+        requestAnimationFrame(animate);
+    }   
+    animate();
 });
 
 /**let gameSpeed =  0;
@@ -124,7 +204,6 @@ class Layer{
         this.speed = gameSpeed * this.speedModifier;
     }
     update(){
-        this.speed = 0;
         this.speed = gameSpeed * this.speedModifier;
         if(this.x <= -this.width){
             this.x = this.width + this.x2 - this.speed;
@@ -265,24 +344,7 @@ start();
     requestAnimationFrame(animate);
 } 
 
-
-    function calculandoF Fisica(){
-        const RAPIDEZ = ;
-        const ACELERAÇÂO = ;
-        const ATRITO = ;
-        const MASSA = ;
-        const FORÇA_RESULTANTE = ;
-        const GRAVIDADE = ;
-
-        ACELERAÇÂO = FORÇA_RESULTANTE / MASSA;
-        if(FORÇA_RESULTANTE > ATRITO){
-            ACELERAÇÃO++;
-        }else{
-            ACELERAÇÃO -= 0;
-        }
-    };
- */
-
+*/
 
 
 
