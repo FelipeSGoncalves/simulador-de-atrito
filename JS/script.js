@@ -3,26 +3,28 @@
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
     
-    const CANVAS_WIDTH = canvas.width;
-    const CANVAS_HEIGHT = canvas.height;
-
-    console.log(CANVAS_WIDTH);
-    console.log(CANVAS_HEIGHT);
+    const CANVAS_WIDTH = canvas.width = 1400;
+    const CANVAS_HEIGHT = canvas.height = 720;
     
     const backgroundImage = new Image();
-    backgroundImage.src = '../IMG/jupiter/background_jupiter.png';
+    backgroundImage.src = '../IMG/jupiter/background.png';
     
     const towerImage = new Image();
-    towerImage.src = '../IMG/jupiter/tower_jupiter.png';
+    towerImage.src = '../IMG/jupiter/tower.png';
     
     const floorImage = new Image();
-    floorImage.src = '../IMG/jupiter/floor_jupiter.png';
+    floorImage.src = '../IMG/jupiter/floor.png';
+
+    const layerImage = new Image();
+    layerImage.src = '../IMG/jupiter/layer.png';
 
     const robotImage = new Image();
     robotImage.src = '../IMG/robot_player.png';
 
     const boxImage = new Image();
     boxImage.src = '../IMG/wooden_box.png';
+
+
 
     let gameSpeed = 5;
     class InputHandler{
@@ -72,22 +74,115 @@
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
             ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
         }
-    }    
+    }
+
+    class Layer{
+        constructor(image){
+            this.image = image;
+            this.width = CANVAS_WIDTH;
+            this.height = CANVAS_HEIGHT;
+            this.x = 0;
+            this.y = 0;
+        }
+        draw(){
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        }
+    }
+    
+    class Box{
+        constructor(image){
+            this.width = 100;
+            this.height = 100;
+            this.x = CANVAS_WIDTH/2;
+            this.y = 355;
+            this.image = image;
+        }   
+        draw(){
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        } 
+    }
+    // class Robot{
+    //     constructor(gameWidth, gameHeight){
+    //         this.gameWidth = gameWidth;
+    //         this.gameHeight = gameHeight;
+    //         this.width = 100;
+    //         this.height = 100;
+    //         this.x = 0;
+    //         this.y = gameHeight - 100;
+    //         this.image = document.getElementById('robotImage');
+    //         this.Framex = 0;
+    //         this.Framey= 0;
+    //         this.speed = 0;
+    //         this.vy =0;
+    //         this.weight = 1;
+    //         this.tempo = 0;
+    //     }
+    //     draw(context){
+    //         context.fillStyle = 'transparent';
+    //         context.fillRect(this.x, this.y, this.width, this. height);
+    //         context.drawImage(this.image, this.Framex * this.width, this.Framey * this.height,
+    //         this.width, this.height , this.x, this.y, this.width, this.height);
+    //     }
+    //     update(input){
+    //         if(input.keys.indexOf('ArrowRight') > -1){
+    //             this.speed = 5;
+    //             if(this.tempo <= 4){
+    //                 this.Framex++;
+    //             }else{
+    //                 this.Framex--;
+    //             }
+                
+    //         }else if(input.keys.indexOf('ArrowLeft') > -1){
+    //             this.speed = -5;
+    //         }else if(input.keys.indexOf('ArrowUp') > -1 && this.onGround()){
+    //             this.vy -= 15;
+    //         }else{
+    //             this.speed = 0;
+    //             this.Framex = 0;
+    //         }
+    //         this.x += this.speed;
+        
+    //         if(this.x < 0){
+    //             this.x=0;
+    //         }else if (this.x > this.gameWidth - this.width){
+    //             this.x = this.gameWidth - this.width;
+    //         }
+    //         this.y += this.vy;
+            
+    //         if(!this.onGround()){
+    //             this.vy += this.weight;
+    //             this.Framey = 2;
+    //         }else{
+    //             this.vy = 0;
+    //             this.Framey = 0;
+    //         }
+    //         if (this.y > this.gameHeight - this.height){
+    //             this.y = this.gameHeight - this.height;
+    //         }
+    //     }
+    //     onGround(){
+    //         return this.y >= this.gameHeight - this.height;
+    //     }
+    // }
 
     const input = new InputHandler();
     
     const background = new Background(backgroundImage, 0.01);
     const tower = new Background(towerImage, 0.4);
-    const floor = new Background(floorImage, 1);  
+    const floor = new Background(floorImage, 1);
+    const layer = new Layer(layerImage);
+    const box = new Box(boxImage);
     
     const gameBackground = [background, tower, floor];
 
     function animate(){
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        layer.draw();
         gameBackground.forEach(object => {
             object.update();
             object.draw();
         });
+        box.draw();
         requestAnimationFrame(animate);
     }   
     animate();
@@ -95,70 +190,7 @@
 /**let gameSpeed =  0;
     
 
-  const robot = new Robot(CANVAS_WIDTH, CANVAS_HEIGHT);
-    class Robot{
-        constructor(gameWidth, gameHeight){
-            this.gameWidth = gameWidth;
-            this.gameHeight = gameHeight;
-            this.width = 100;
-            this.height = 100;
-            this.x = 0;
-            this.y = 155;
-            this.image = document.getElementById('robotImage');
-            this.Framex = 0;
-            this.Framey= 0;
-            this.speed = 0;
-            this.vy =0;
-            this.weight = 1;
-            this.tempo = 0;
-        }
-        draw(context){
-            context.fillStyle = 'transparent';
-            context.fillRect(this.x, this.y, this.width, this. height);
-            context.drawImage(this.image, this.Framex * this.width, this.Framey * this.height,
-            this.width, this.height , this.x, this.y, this.width, this.height);
-        }
-        update(input){
-            if(input.keys.indexOf('ArrowRight') > -1){
-                this.speed = 5;
-                if(this.tempo <= 4){
-                    this.Framex++;
-                }else{
-                    this.Framex--;
-                }
-                
-            }else if(input.keys.indexOf('ArrowLeft') > -1){
-                this.speed = -5;
-            }else if(input.keys.indexOf('ArrowUp') > -1 && this.onGround()){
-                this.vy -= 15;
-            }else{
-                this.speed = 0;
-                this.Framex = 0;
-            }
-            this.x += this.speed;
-        
-            if(this.x < 0){
-                this.x=0;
-            }else if (this.x > this.gameWidth - this.width){
-                this.x = this.gameWidth - this.width;
-            }
-            this.y += this.vy;
-            
-            if(!this.onGround()){
-                this.vy += this.weight;
-                this.Framey = 2;
-            }else{
-                this.vy = 0;
-                this.Framey = 0;
-            }
-            if (this.y > this.gameHeight - this.height){
-                this.y = this.gameHeight - this.height;
-            }
-        }
-        onGround(){
-            return this.y >= this.gameHeight - this.height;
-        }
-    }
+  
     function calculandoAtrito(miEstatico, massa, gravidade){
         forcaDeAtritoMax = miEstatico * massa * gravidade;
       
@@ -244,20 +276,6 @@ function start() {
     ctx = canvas.getContext("2d");
 }
 
-function KeyDown(evt){
-    switch (evt.keyCode) {
-        case 37: //esquerda
-            if (x - dx > 0){
-                x -= dx;
-            }
-            break;
-        case 39:  //direita
-            if (x + dx < w){
-                x += dx;
-            }
-            break;
-    }
-}
 
 function Atualizar() {
     clear();    
@@ -268,30 +286,19 @@ start();
 */
 
 
-/**
     
-    const LARGURA_SPRITE = 64;
-    const ALTURA_SPRITE = 64;
-    const sprite = new Image();
-    sprite.src = '../IMG/PC Computer - RPG Maker MV - Character 05 Battle.png';
+//     const LARGURA_SPRITE = 64;
+//     const ALTURA_SPRITE = 64;
+//     const sprite = new Image();
+//     sprite.src = '../IMG/PC Computer - RPG Maker MV - Character 05 Battle.png';
  
-    function animate(){
-    ctx.clearRect(0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
-    ctx.drawImage(sprite, contadorDeFrames * LARGURA_SPRITE, 0, LARGURA_SPRITE, ALTURA_SPRITE, 0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
-    if(gameFrame % staggerFrames == 0){
-        if(contadorDeFrames < 5 ) contadorDeFrames++;
-        else contadorDeFrames = 0;
-    }
-    gameFrame++;
-    requestAnimationFrame(animate);
-} 
-
-*/
-
-
-
-
-
-
-
-
+//     function animate(){
+//     ctx.clearRect(0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
+//     ctx.drawImage(sprite, contadorDeFrames * LARGURA_SPRITE, 0, LARGURA_SPRITE, ALTURA_SPRITE, 0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
+//     if(gameFrame % staggerFrames == 0){
+//         if(contadorDeFrames < 5 ) contadorDeFrames++;
+//         else contadorDeFrames = 0;
+//     }
+//     gameFrame++;
+//     requestAnimationFrame(animate);
+// }
