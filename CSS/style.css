@@ -1,18 +1,13 @@
 body{
-    background: white;
+    background: rgb(18, 24, 107);
 }
 
 canvas{
     position: absolute;
-    width: 90% ;
-    height: 90%;
+    width: 1400px ;
+    height:700px;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     border: 5px groove black;   
-    
-}
-
-#backgroundImage, #floorImage, #robotImage, #boxImage, #towerImage{
-    display: none;
 }

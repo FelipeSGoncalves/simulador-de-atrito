@@ -1,27 +1,30 @@
 /** @type {HTMLCanvasElement} */
 
-window.addEventListener('load', function(){
-    /*
-    function calculandoAtrito(miEstatico, massa, gravidade){
-        forcaDeAtritoMax = miEstatico * massa * gravidade;
-      
-    }
-
-    function calculandoAceleracao(forcaDeAtritoMax, FORÇA_RESULTANTE, massa){
-        aceleracao = FORÇA_RESULTANTE / massa;
-        if(FORÇA_RESULTANTE > forcaDeAtritoMax){
-            gameSpeed = aceleracao;
-        }else{
-            aceleracao -= 0;
-        }
-    };
-    */
     canvas = document.getElementById("canvas");
     ctx = canvas.getContext("2d");
+    
+    const CANVAS_WIDTH = canvas.width;
+    const CANVAS_HEIGHT = canvas.height;
 
-    const CANVAS_WIDTH = canvas.width = window.screen.width;
-    const CANVAS_HEIGHT = canvas.height = window.screen.height;
+    console.log(CANVAS_WIDTH);
+    console.log(CANVAS_HEIGHT);
+    
+    const backgroundImage = new Image();
+    backgroundImage.src = '../IMG/jupiter/background_jupiter.png';
+    
+    const towerImage = new Image();
+    towerImage.src = '../IMG/jupiter/tower_jupiter.png';
+    
+    const floorImage = new Image();
+    floorImage.src = '../IMG/jupiter/floor_jupiter.png';
 
+    const robotImage = new Image();
+    robotImage.src = '../IMG/robot_player.png';
+
+    const boxImage = new Image();
+    boxImage.src = '../IMG/wooden_box.png';
+
+    let gameSpeed = 5;
     class InputHandler{
         constructor(){
             this.keys = [];
@@ -31,20 +34,68 @@ window.addEventListener('load', function(){
                     e.key === 'ArrowLeft' ||
                     e.key === 'ArrowRight')
                     && this.keys.indexOf(e.key) === -1){
-                    this.keys.push(e.key);
+                        this.keys.push(e.key);
                 }
             });
             window.addEventListener('keyup', e =>{
-            if( e.key === 'ArrowDown' ||
-                e.key === 'ArrowUp' ||
-                e.key === 'ArrowLeft' ||
-                e.key === 'ArrowRight'){
-                    this.keys.splice(this.keys.indexOf(e.key), 1);
+                if( e.key === 'ArrowDown' ||
+                    e.key === 'ArrowUp' ||
+                    e.key === 'ArrowLeft' ||
+                    e.key === 'ArrowRight'){
+                        this.keys.splice(this.keys.indexOf(e.key), 1);
                 }
             });
         }
     }
+    class Background{
+        constructor(image, speedModifier){
+            this.image = image;
+            this.width = CANVAS_WIDTH;
+            this.height = CANVAS_HEIGHT;
+            this.x = 0;
+            this.x2 = this.width;
+            this.y = 0;
+            this.speedModifier = speedModifier;
+            this.speed = gameSpeed * this.speedModifier;
+        }
+        update(){
+            if(this.x <= -this.width){
+                this.x = this.width + this.x2 - this.speed;
+            }
+            if(this.x2 <= -this.width){
+                this.x2 = this.width + this.x - this.speed;
+            }
+            this.x = Math.floor(this.x - this.speed);
+            this.x2 = Math.floor(this.x2 - this.speed)
+        }
+        draw(){
+            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+        }
+    }    
 
+    const input = new InputHandler();
+    
+    const background = new Background(backgroundImage, 0.01);
+    const tower = new Background(towerImage, 0.4);
+    const floor = new Background(floorImage, 1);  
+    
+    const gameBackground = [background, tower, floor];
+
+    function animate(){
+        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        gameBackground.forEach(object => {
+            object.update();
+            object.draw();
+        });
+        requestAnimationFrame(animate);
+    }   
+    animate();
+
+/**let gameSpeed =  0;
+    
+
+  const robot = new Robot(CANVAS_WIDTH, CANVAS_HEIGHT);
     class Robot{
         constructor(gameWidth, gameHeight){
             this.gameWidth = gameWidth;
@@ -108,133 +159,24 @@ window.addEventListener('load', function(){
             return this.y >= this.gameHeight - this.height;
         }
     }
-
-    class Box{
-        constructor(gameWidth, gameHeight){
-            this.gameWidth = gameWidth;
-            this.gameHeight = gameHeight;
-            this.width = 200;
-            this.height = 200;
-            this.x = CANVAS_WIDTH / 2 - 25;
-            this.y = 530;
-            this.image = document.getElementById('boxImage');
-            this.Framex = 0;
-            this.Framey= 0;
-            this.speed = 0;
-        }
-        draw(context){
-            context.fillStyle = 'white';
-            context.fillRect(this.x, this.y, this.width, this. height);
-            context.drawImage(this.image, this.Framex * this.width, this.Framey * this.height,
-            this.width, this.height , this.x, this.y, this.width, this.height);
-        }
-    }
-    class Background{
-        constructor(gameWidth, gameHeight){
-            this.gameWidth = gameWidth;
-            this.gameHeight = gameHeight;
-            this.image = document.getElementById('backgroundImage')
-            this.x = 0;
-            this.y = 0;
-            this.width = CANVAS_WIDTH; 
-            this.height = CANVAS_HEIGHT;
-        }
-        draw(context){
-            context.drawImage(this.image, this.x, this.y, this.width, this.height);
-        }
-    } 
-    /*class Tower{
-        constructor(gameWidth, gameHeight)
-    } 
-    */
-    class Floor{
-        constructor(gameWidth, gameHeight){
-            this.gameWidth = gameWidth;
-            this.gameHeight = gameHeight;
-            this.image = document.getElementById('floorImage')
-            this.x = 0;
-            this.y = 0;
-            this.width = CANVAS_WIDTH;
-            this.height = CANVAS_HEIGHT;
-        }
-        draw(context){
-            context.drawImage(this.image, this.x, this.y, this.width, this.height);
-        }
-    }   
-
-    const input = new InputHandler();
-    const background = new Background(CANVAS_WIDTH, this.CANVAS_HEIGHT);
-    const floor = new Floor(CANVAS_WIDTH, this.CANVAS_HEIGHT);
-    const robot = new Robot(CANVAS_WIDTH, CANVAS_HEIGHT);
-    const box = new Box(CANVAS_WIDTH, CANVAS_HEIGHT);
-
-    function animate(){
-        ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-        background.draw(ctx);
-        floor.draw(ctx);
-        robot.draw(ctx);
-        robot.update(input);
-        box.draw(ctx);
-        requestAnimationFrame(animate);
-    }   
-    animate();
-});
-
-/**let gameSpeed =  0;
-
-const backgroundLayer1 = new Image();
-backgroundLayer1.src = '../IMG/background.png';
-
-const backgroundLayer2 = new Image();
-backgroundLayer2.src = '../IMG/floor.png';
-
-const backgroundLayer3 = new Image();
-backgroundLayer3.src = '../IMG/ballon.png';
-class Layer{
-    constructor(image, speedModifier){
-        this.x = 0;
-        this.y = 0;
-        this.speed = 0;
-        this.speedModifier = 0;
-        this.width = 520;
-        this.height = 250;
-        this.x2 = this.width;
-        this.image = image;
-        this.speedModifier = speedModifier;
-        this.speed = gameSpeed * this.speedModifier;
-    }
-    update(){
-        this.speed = gameSpeed * this.speedModifier;
-        if(this.x <= -this.width){
-            this.x = this.width + this.x2 - this.speed;
-        }
-        if(this.x2 <= -this.width){
-            this.x2 = this.width + this.x - this.speed;
-        }
-        this.x = Math.floor(this.x - this.speed);
-        this.x2 = Math.floor(this.x2 - this.speed)
-    }
-    draw(){
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-        ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
-        
+    function calculandoAtrito(miEstatico, massa, gravidade){
+        forcaDeAtritoMax = miEstatico * massa * gravidade;
+      
     }
 
-}
-
-const layer1 = new Layer(backgroundLayer1, 0.1);
-const layer2 = new Layer(backgroundLayer2, 1);
-const layer3 = new Layer(backgroundLayer3, 0.3);
-
-const gameObjects =[layer1, layer2, layer3];
+    function calculandoAceleracao(forcaDeAtritoMax, FORÇA_RESULTANTE, massa){
+        aceleracao = FORÇA_RESULTANTE / massa;
+        if(FORÇA_RESULTANTE > forcaDeAtritoMax){
+            gameSpeed = aceleracao;
+        }else{
+            gameSpeed -= 0;
+        }
+    };
 
 function animate(){
     ctx.clearRect(0, 0, LARGURA_CANVAS, ALTURA_CANVAS); 
     
-    gameObjects.forEach(object => {
-        object.update();
-        object.draw();
-    });
+    
     
     requestAnimationFrame(animate);
 };
