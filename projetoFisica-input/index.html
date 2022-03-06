@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css"> 
+    <title>Simulador de atrito - Júpiter</title>
+</head>
+<body>
+    <!-- Criação do botão responsável pelo input da força aplicada-->
+    <div class="range">
+        <div class="sliderValue">
+            <span id="showGameSpeed"> 100 </span>
+        </div>
+        <div class="field">
+            <div class="value left"> 0N </div>
+            <input type="range" min="0" max="60" value="0" step="1" id="slider">
+            <div class="value right"> 60N </div>
+        </div>
+    </div>
+
+    <!-- Criação do botão responsável pelo input do coeficiente de atrito-->
+    <div class="range" id="range2">
+        <div class="sliderValue">
+            <span id="showAtrito"> 100 </span>
+        </div>
+        <div class="field">
+            <div class="value left"> 0u </div>
+            <input type="range" min="0" max="1" value="0" step="0.01" id="sliderAtrito">
+            <div class="value right"> 1u </div>
+        </div>
+    </div>
+
+
+    <canvas id="canvas"></canvas>
+    <script src="JS/script.js"></script>
+
+</body>
+</html>
