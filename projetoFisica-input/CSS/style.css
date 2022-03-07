@@ -15,9 +15,20 @@ canvas{
     z-index: 0; 
 }
 
+.layer{
+    position: absolute;
+    width: 1400px;
+    height: 720px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 5px groove black;  
+    z-index: 1; 
+}
+
 .range{
-    margin-left: 42%;
-    margin-top: 35%;
+    margin-left: 37%;
+    margin-top: 40%;
     height: 80px;
     width: 360px;
     border-radius: 10px;
