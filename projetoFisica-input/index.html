@@ -8,7 +8,7 @@
     <title>Simulador de atrito - Júpiter</title>
 </head>
 <body>
-    <div class="layer">
+    <div class="tudo">
         <!-- Criação do botão responsável pelo input da força aplicada-->
         <div class="range">
             <div class="sliderValue">
@@ -16,8 +16,8 @@
             </div>
             <div class="field">
                 <div class="value left"> 0N </div>
-                <input type="range" min="0" max="60" value="0" step="1" id="slider">
-                <div class="value right"> 60N </div>
+                <input type="range" min="0" max="100" value="0" step="1" id="slider">
+                <div class="value right"> 100N </div>
             </div>
         </div>
 
@@ -32,10 +32,16 @@
                 <div class="value right"> 1u </div>
             </div>
         </div>
-    </div>
 
-    <canvas id="canvas"></canvas>
-    <script src="JS/script.js"></script>
+        <div>
+            <button class="button"> Stop </button>
+            <p>The program has stopped</p>
+        </div>
+
+
+        <canvas id="canvas"></canvas>
+        <script src="JS/script.js"></script>
+    </div>
 
 </body>
 </html>
