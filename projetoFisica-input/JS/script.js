@@ -1,3 +1,4 @@
+
 /** @type {HTMLCanvasElement} */
 
     canvas = document.getElementById("canvas");
@@ -5,16 +6,6 @@
     
     const CANVAS_WIDTH = canvas.width = 1400;
     const CANVAS_HEIGHT = canvas.height = 720;
-
-    // variaveis para os calculos de movimento
-    let forcaDeAtritoMax;
-    let miEstatico;
-    let massa;
-    let gravidade;
-    let aceleracao;
-
-    let forcaNormal
-    let coeficienteAtrito = 0.3; // coeficiente de atrito do concreto
 
     // declaração das imagens
     const backgroundImage = new Image();
@@ -40,16 +31,9 @@
     let gameSpeed = 0;
     let atrito = 0;
 
+
     // função responsável por pegar o valor da força aplicada, através do input
-    const slider = document.getElementById('slider');
-    slider.value = gameSpeed;
-    const showGameSpeed = document.getElementById('showGameSpeed');
-    showGameSpeed.innerHTML = gameSpeed;
-    slider.addEventListener('change', function(e){
-        gameSpeed = e.target.value;
-        console.log(gameSpeed);
-        showGameSpeed.innerHTML = e.target.value;
-    });
+   
 
     // função responsável por pegar o valor do atrito, através do input
     const sliderAtrito = document.getElementById('sliderAtrito');
@@ -63,31 +47,146 @@
     });
 
     // funções para os cálculos de física
-    // OBS: ainda não estao corretas, nem feitas...
-    function calculoForcaNormal(){
 
-    }
+    // variaveis fundamentais
+    let tempo = 0;
+    let massa = 5;
+    let gravidade = 10;
+    let forcaAplicada = 0;
+    let coeficienteAtritoEst = 0.5;
+    let coeficienteAtritoCin = 0.4;
+    let velocidadeIn = 0;
+    let deslocamentoIn;
+    let movimentoSuculento = 0;
+
+    let taEncostado = true;
+    let continuaAndando = true;
+
+
+    const btn = document.querySelector("button");
+    const txt = document.querySelector("p");
     
-    function calculandoAtrito(forcaNormal, coeficienteAtrito){
-        forcaDeAtritoMax = forcaNormal * coeficienteAtrito;
-        
-        return forcaDeAtritoMax;
+    btn.addEventListener("click", updateBtn);
+    
+    function updateBtn() {
+        if (btn.textContent === "Start Machine") {
+            btn.textContent = "Stop Machine";
+            txt.textContent = "The Machine has Started";
+            taEncostado = true;
+        } else {
+            btn.textContent = "Start Machine";
+            txt.textContent = "The Machine is Stopped";
+            taEncostado = false;
+        }
     }
 
-    function calculandoAceleracao(){
-        // aceleracao = FORÇA_RESULTANTE / massa;
-        // if(FORÇA_RESULTANTE > forcaDeAtritoMax){
-        //     gameSpeed = aceleracao;
-        // }else{
-        //     gameSpeed -= 0;
-        // }
 
-        forcaDeAtritoMax = calculandoAtrito(50, 0.1);
+    // forças
 
-        gameSpeed = forcaDeAtritoMax;
-        
-        return gameSpeed;
+    const slider = document.getElementById('slider');
+    slider.value = forcaAplicada;
+    const showGameSpeed = document.getElementById('showGameSpeed');
+    showGameSpeed.innerHTML = forcaAplicada;
+    slider.addEventListener('change', function(e){
+        forcaAplicada = e.target.value;
+        showGameSpeed.innerHTML = e.target.value;
+    });
+    // funções responsaveis pelos calculos
+
+    // calculo da força peso
+    function forcaPeso(){
+        let forcaP;
+        forcaP = massa * gravidade;
+
+        return forcaP;
     }
+
+    // calculo da força de atrito estatico
+    function fatEstatico(){
+        let forcaAtritoEst;
+        forcaAtritoEst = coeficienteAtritoEst * forcaPeso();
+
+        return forcaAtritoEst;
+    }
+
+    // calculo da força de atrito cinetico
+    function fatCinetico(){
+        let forcaAtritoCin;
+        forcaAtritoCin = coeficienteAtritoCin * forcaPeso();
+
+        return forcaAtritoCin;
+    }
+
+    // calculo da força resultante
+    function forcaResultante(){
+        let forcaRes;
+        forcaRes = forcaAplicada - fatCinetico();
+
+        return forcaRes;
+    }
+
+    // calculo da aceleração
+    function aceleracao(){
+        let aceleracao;
+        aceleracao = (forcaAplicada - fatEstatico()) / massa;
+
+        aceleracao = aceleracao / 50;
+
+        return aceleracao;
+    }
+
+    function velo(){
+        let velocidade;
+        tempo = (tempo+1)/24;
+        velocidade = 0 + aceleracao() * tempo;
+
+        return velocidade;
+    }
+
+    function desaceleracao(){
+        let desaceleracao;
+        desaceleracao = (0 - 250) / 500;
+
+        return desaceleracao;
+    }
+
+    // calculo de velocidade final
+    function velocidadeF(){
+        let velocidadeF;
+        velocidadeF = velocidadeIn + aceleracao() * tempo;
+
+        return velocidadeF;
+    }
+
+    // calculo do deslocamento
+    function deslocamento(){
+        let descolamento;
+        deslocamento = (deslocamentoIn + velocidadeIn * tempo + aceleracao() * Math.pow(tempo, 2)) / 2;
+
+        return descolamento;
+    }
+
+
+    function calculoMovimentacao(){
+
+        if(forcaAplicada > fatEstatico()){
+            if(movimentoSuculento <= 150 && taEncostado == true){
+                movimentoSuculento += aceleracao();
+                console.log(aceleracao());
+                console.log(movimentoSuculento);
+                //testando();
+            }
+            else{
+                movimentoSuculento += desaceleracao()/10;
+            }
+
+            if(movimentoSuculento < 0){
+                movimentoSuculento = 0;
+            }
+        }
+        return movimentoSuculento;
+    }
+
 
     class InputHandler{
         constructor(){
@@ -121,10 +220,10 @@
             this.x2 = this.width;
             this.y = 0;
             this.speedModifier = speedModifier;
-            this.speed = gameSpeed * this.speedModifier;
+            this.speed = calculoMovimentacao() * this.speedModifier;
         }
         update(){
-            this.speed = gameSpeed * this.speedModifier - atrito;
+            this.speed = calculoMovimentacao() * this.speedModifier;
 
             if(this.x <= -this.width){
                 this.x = this.width + this.x2 - this.speed;
