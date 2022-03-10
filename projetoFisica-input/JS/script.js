@@ -9,27 +9,28 @@
 
     // declaração das imagens
     const backgroundImage = new Image();
-    backgroundImage.src = '../IMG/jupiter/background.png';
+    backgroundImage.src = './IMG/terra/background.png';
     
     const towerImage = new Image();
-    towerImage.src = '../IMG/jupiter/tower.png';
+    towerImage.src = './IMG/terra/tower.png';
     
     const floorImage = new Image();
-    floorImage.src = '../IMG/jupiter/floor.png';
+    floorImage.src = './IMG/terra/floor.png';
 
     const layerImage = new Image();
-    layerImage.src = '../IMG/jupiter/layer.png';
+    layerImage.src = './IMG/terra/layer.png';
 
     const robotImage = new Image();
-    robotImage.src = '../IMG/robot_player.png';
+    robotImage.src = './IMG/robot_player.png';
 
     const boxImage = new Image();
-    boxImage.src = '../IMG/wooden_box.png';
+    boxImage.src = './IMG/wooden_box.png';
 
     // funções
 
     let gameSpeed = 0;
     let atrito = 0;
+    let contador = 0;
 
 
     // função responsável por pegar o valor da força aplicada, através do input
@@ -130,7 +131,7 @@
         let aceleracao;
         aceleracao = (forcaAplicada - fatEstatico()) / massa;
 
-        aceleracao = aceleracao / 50;
+
 
         return aceleracao;
     }
@@ -168,24 +169,24 @@
 
 
     function calculoMovimentacao(){
+        contador++;
+            if(forcaAplicada > fatEstatico()){
+                if(movimentoSuculento <= 150 && taEncostado == true && contador%24==0){
+                    movimentoSuculento += aceleracao(); 
+                    console.log(aceleracao());
+                    console.log(movimentoSuculento);
+                    //testando();
+                }
+                else{
+                    movimentoSuculento += desaceleracao()/10;
+                }
 
-        if(forcaAplicada > fatEstatico()){
-            if(movimentoSuculento <= 150 && taEncostado == true){
-                movimentoSuculento += aceleracao();
-                console.log(aceleracao());
-                console.log(movimentoSuculento);
-                //testando();
+                if(movimentoSuculento < 0){
+                    movimentoSuculento = 0;
+                }
             }
-            else{
-                movimentoSuculento += desaceleracao()/10;
-            }
-
-            if(movimentoSuculento < 0){
-                movimentoSuculento = 0;
-            }
+            return movimentoSuculento;
         }
-        return movimentoSuculento;
-    }
 
 
     class InputHandler{
