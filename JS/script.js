@@ -257,12 +257,11 @@
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         } 
     }
-    
     class Robot{
         constructor(image){
             this.width = 217;
             this.height = 200;
-            this.x = CANVAS_WIDTH / 2 - this.width;
+            this.x = 0;
             this.y = CANVAS_HEIGHT - 450;
             this.image = image;
             this.Framex = 0;
@@ -271,16 +270,35 @@
             this.vy =0;
             this.weight = 1;
             this.tempo = 0;
+            
         }
         draw(context){
             ctx.fillStyle = 'transparent';
-            ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+            context.fillRect(this.x, this.y, this.width, this. height);
+            context.drawImage(this.image, this.x, this.y, this.width, this.height);
         }
+        colide(){
+            if(this.x + this.width > (CANVAS_WIDTH/2)){
+                if(this.x + this.width > (CANVAS_WIDTH/2)){
+                    this.x -= ((this.x + this.width) - (CANVAS_WIDTH/2)) - 1; 
+                }
+            }
+        }
+        update(input){ 
+                if(input.keys.indexOf('ArrowRight') > -1){
+                    this.speed = 5;
+                }else if(input.keys.indexOf('ArrowLeft') > -1){
+                    this.speed = -5;
+                }else{
+                    this.speed = 0;
+                }
+                this.x += this.speed;
+                if(this.x < 0) this.x = 0;
+                else if (this.x > CANVAS_WIDTH - this.width) this.x = CANVAS_WIDTH - this.width;       
+        }   
     }
 
-
     const input = new InputHandler();
-    
     const background = new Background(backgroundImage, 0.01);
     const tower = new Background(towerImage, 0.4);
     const floor = new Background(floorImage, 1);
@@ -293,14 +311,14 @@
     function animate(){
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
         layer.draw();
-            gameBackground.forEach(object => {
-                object.update();
-                object.draw();
-            });
-     
+        gameBackground.forEach(object => {
+            object.update();
+            object.draw();
+        }); 
         box.draw();
-        robot.draw();
+        robot.draw(ctx);
+        robot.colide();
+        robot.update(input);
         requestAnimationFrame(animate);
-        
-    }   
+    }
     animate();
