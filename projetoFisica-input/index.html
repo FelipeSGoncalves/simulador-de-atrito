@@ -1,44 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
     <link rel="stylesheet" href="css/style.css"> 
     <link rel="icon" href="./IMG/icon/earth.png">
-    <title>Simulador de atrito - Terra</title>
+    
+    <title> Simulador de atrito - Terra </title>
 </head>
+
 <body>
-    <div class="layer">
-        <!-- Criação do botão responsável pelo input da força aplicada-->
-        <div class="range">
-            <div class="sliderValue">
-                <span id="showGameSpeed"> 100 </span>
-            </div>
-            <div class="field">
-                <div class="value left"> 0N </div>
-                <input type="range" min="0" max="100" value="0" step="1" id="slider">
-                <div class="value right"> 100N </div>
-            </div>
+    <!-- Criação da interface do usuario-->
+    <div class="display">
+        <div class="velocimetro">
+            <h1> 100 </h1>
         </div>
-
-        <!-- Criação do botão responsável pelo input do coeficiente de atrito-->
-        <div class="range" id="range2">
-            <div class="sliderValue">
-                <span id="showAtrito"> 100 </span>
+ 
+        <div class="layer">
+            <div class="column">
+                <!-- Criação do botão responsável pelo input da força aplicada-->
+                <div class="range">
+                    <div class="sliderValue">
+                        <span id="showGameSpeed"> 100 </span>
+                    </div>
+                    <div class="field">
+                        <div class="value left"> 0N </div>
+                        <input type="range" min="0" max="100" value="0" step="1" id="slider">
+                        <div class="value right"> 100N </div>
+                    </div>
+                </div>  
+                <!-- Criação do botão responsável pelo input do coeficiente de atrito-->
+                <div class="range" id="range2">
+                    <div class="sliderValue">
+                        <span id="showAtrito"> 100 </span>
+                    </div>
+                    <div class="field">
+                        <div class="value left"> 0u </div>
+                        <input type="range" min="0" max="1" value="0" step="0.01" id="sliderAtrito">
+                        <div class="value right"> 1u </div>
+                    </div>
+                </div>
+                
+                <div class="button">
+                    <button> Stop </button>
+                    <p>The program has stopped</p>
+                </div>
             </div>
-            <div class="field">
-                <div class="value left"> 0u </div>
-                <input type="range" min="0" max="1" value="0" step="0.01" id="sliderAtrito">
-                <div class="value right"> 1u </div>
-            </div>
-        </div>
-
-        <div>
-            <button class="button"> Stop </button>
-            <p>The program has stopped</p>
         </div>
     </div>
+
     <canvas id="canvas"></canvas>
     <script src="JS/script.js"></script>
 

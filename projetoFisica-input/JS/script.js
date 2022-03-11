@@ -26,72 +26,66 @@
     const boxImage = new Image();
     boxImage.src = './IMG/wooden_box.png';
 
-    // funções
-
+    //declaração de variaveis
     let gameSpeed = 0;
-    let atrito = 0;
     let contador = 0;
-
+    // variaveis fundamentais para a fisica
+    let massa = 5;
+    let gravidade = 10;
+    let forcaAplicada = 0;
+    let velocidadeIn = 0;
+    let deslocamentoIn;
+    let movimentoSuculento = 0;
+    let tempo = 0;
+    let atrito = 0;
+    let coeficienteAtritoEst = 0.5;
+    let coeficienteAtritoCin = 0.4;
+    let taEncostado = true;
+    let continuaAndando = true;
 
     // função responsável por pegar o valor da força aplicada, através do input
    
 
     // função responsável por pegar o valor do atrito, através do input
-    const sliderAtrito = document.getElementById('sliderAtrito');
-    sliderAtrito.value = atrito;
-    const showAtrito = document.getElementById('showAtrito');
-    showAtrito.innerHTML = atrito;
-    sliderAtrito.addEventListener('change', function(e){
-        atrito = e.target.value;
-        console.log(atrito);
-        showAtrito.innerHTML = e.target.value;
-    });
+        const sliderAtrito = document.getElementById('sliderAtrito');
+        sliderAtrito.value = atrito;
+        
+        const showAtrito = document.getElementById('showAtrito');
+        showAtrito.innerHTML = atrito;
+        
+        sliderAtrito.addEventListener('change', function(e){
+            atrito = e.target.value;
+            console.log(atrito);
+            showAtrito.innerHTML = e.target.value;
+        });
 
-    // funções para os cálculos de física
-
-    // variaveis fundamentais
-    let tempo = 0;
-    let massa = 5;
-    let gravidade = 10;
-    let forcaAplicada = 0;
-    let coeficienteAtritoEst = 0.5;
-    let coeficienteAtritoCin = 0.4;
-    let velocidadeIn = 0;
-    let deslocamentoIn;
-    let movimentoSuculento = 0;
-
-    let taEncostado = true;
-    let continuaAndando = true;
-
-
-    const btn = document.querySelector("button");
-    const txt = document.querySelector("p");
-    
-    btn.addEventListener("click", updateBtn);
-    
-    function updateBtn() {
-        if (btn.textContent === "Start Machine") {
-            btn.textContent = "Stop Machine";
-            txt.textContent = "The Machine has Started";
-            taEncostado = true;
-        } else {
-            btn.textContent = "Start Machine";
-            txt.textContent = "The Machine is Stopped";
-            taEncostado = false;
+        const btn = document.querySelector("button");
+        const txt = document.querySelector("p");
+        btn.addEventListener("click", updateBtn);
+        
+        function updateBtn() {
+            if (btn.textContent === "Start Machine") {
+                btn.textContent = "Stop Machine";
+                txt.textContent = "The Machine has Started";
+                taEncostado = true;
+            } else {
+                btn.textContent = "Start Machine";
+                txt.textContent = "The Machine is Stopped";
+                taEncostado = false;
+            }
         }
-    }
+        
+        const slider = document.getElementById('slider');
+        slider.value = forcaAplicada;
+        
+        const showGameSpeed = document.getElementById('showGameSpeed');
+        showGameSpeed.innerHTML = forcaAplicada;
+        
+        slider.addEventListener('change', function(e){
+            forcaAplicada = e.target.value;
+            showGameSpeed.innerHTML = e.target.value;
+        });
 
-
-    // forças
-
-    const slider = document.getElementById('slider');
-    slider.value = forcaAplicada;
-    const showGameSpeed = document.getElementById('showGameSpeed');
-    showGameSpeed.innerHTML = forcaAplicada;
-    slider.addEventListener('change', function(e){
-        forcaAplicada = e.target.value;
-        showGameSpeed.innerHTML = e.target.value;
-    });
     // funções responsaveis pelos calculos
 
     // calculo da força peso
@@ -130,8 +124,6 @@
     function aceleracao(){
         let aceleracao;
         aceleracao = (forcaAplicada - fatEstatico()) / massa;
-
-
 
         return aceleracao;
     }
@@ -179,6 +171,7 @@
                 }
                 else{
                     movimentoSuculento += desaceleracao()/10;
+                    console.log(movimentoSuculento);
                 }
 
                 if(movimentoSuculento < 0){
@@ -186,9 +179,8 @@
                 }
             }
             return movimentoSuculento;
-        }
-
-
+    }
+    //função responsável por obter quais teclas estão sendo precionadas
     class InputHandler{
         constructor(){
             this.keys = [];
@@ -224,20 +216,19 @@
             this.speed = calculoMovimentacao() * this.speedModifier;
         }
         update(){
-            this.speed = calculoMovimentacao() * this.speedModifier;
-
-            if(this.x <= -this.width){
-                this.x = this.width + this.x2 - this.speed;
-            }
-            if(this.x2 <= -this.width){
-                this.x2 = this.width + this.x - this.speed;
-            }
-            this.x = Math.floor(this.x - this.speed);
-            this.x2 = Math.floor(this.x2 - this.speed)
+            this.speed = calculoMovimentacao() * this.speedModifier;         
+                if(this.x <= -this.width){
+                    this.x = this.width + this.x2 - this.speed;
+                }
+                if(this.x2 <= -this.width){
+                    this.x2 = this.width + this.x - this.speed;
+                }
+                this.x = Math.floor(this.x - this.speed);
+                this.x2 = Math.floor(this.x2 - this.speed)
         }
         draw(){
             ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-            ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+            ctx.drawImage(this.image, this.x2-1, this.y, this.width, this.height);
         }
     }
 
@@ -299,53 +290,17 @@
 
     const gameBackground = [background, tower, floor];
 
-
-    function init(){
-        background();
-    }
-
-
-
     function animate(){
         ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
         layer.draw();
-        gameBackground.forEach(object => {
-            object.update();
-            object.draw();
-        });
+            gameBackground.forEach(object => {
+                object.update();
+                object.draw();
+            });
+     
         box.draw();
         robot.draw();
         requestAnimationFrame(animate);
         
     }   
     animate();
-    init();
-
-/*
-
-function animate(){
-    ctx.clearRect(0, 0, LARGURA_CANVAS, ALTURA_CANVAS); 
-    
-    
-    
-    requestAnimationFrame(animate);
-};
-    
-//     const LARGURA_SPRITE = 64;
-//     const ALTURA_SPRITE = 64;
-//     const sprite = new Image();
-//     sprite.src = '../IMG/PC Computer - RPG Maker MV - Character 05 Battle.png';
- 
-//     function animate(){
-//     ctx.clearRect(0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
-//     ctx.drawImage(sprite, contadorDeFrames * LARGURA_SPRITE, 0, LARGURA_SPRITE, ALTURA_SPRITE, 0, 0, LARGURA_CANVAS, ALTURA_CANVAS);
-//     if(gameFrame % staggerFrames == 0){
-//         if(contadorDeFrames < 5 ) contadorDeFrames++;
-//         else contadorDeFrames = 0;
-//     }
-//     gameFrame++;
-//     requestAnimationFrame(animate);
-// }
-
-*/
