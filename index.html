@@ -15,7 +15,7 @@
     <!-- Criação da interface do usuario-->
     <div class="display">
         <div class="velocimetro">
-            <h1> 100 </h1>
+            <h1 class="velocimetro__cover"> 0 m/s</h1>
         </div>
  
         <div class="layer">
@@ -42,10 +42,37 @@
                         <div class="value right"> 1u </div>
                     </div>
                 </div>
-                
+
                 <div class="button">
                     <button> Stop </button>
                     <p>The program has stopped</p>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="layer2">
+            <div class="column">
+                <div class="range">
+                    <div class="sliderValue">
+                        <span id="showGravidade"> 100 </span>
+                    </div>
+                    <div class="field">
+                        <div class="value left"> 0m/s² </div>
+                        <input type="range" min="0" max="100" value="0" step="1" id="sliderGravidade">
+                        <div class="value right"> 100m/s² </div>
+                    </div>
+                </div>  
+                <!-- Criação do botão responsável pelo input do coeficiente de atrito-->
+                <div class="range" id="range2">
+                    <div class="sliderValue">
+                        <span id="showMassa"> 100 </span>
+                    </div>
+                    <div class="field">
+                        <div class="value left"> 0kg </div>
+                        <input type="range" min="0" max="100" value="0" step="1" id="sliderMassa">
+                        <div class="value right"> 100kg </div>
+                    </div>
                 </div>
             </div>
         </div>
