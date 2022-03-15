@@ -62,29 +62,18 @@ canvas{
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 2;
-    display: inline-block;
-}
-
-.layer2{
-    position: absolute;
-    width: 1400px;
-    height: 220px;
-    top: 85%;
-    left: 86%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-    display: inline-block;
+    display: -webkit-inline-flex;
 }
 
 .column{
-    width: 470px;
+    width: 434px;
     height: 220px;
     color: white;
+    margin-top: 5px;
 }
 
 .range{
     font-size: 20px;
-    margin-left: 0;
     margin-top: 10%;
     height: 50px;
     width: 80%;
@@ -168,6 +157,10 @@ canvas{
     cursor: pointer;
 }
 
+#column2{
+    margin-right: 48px;
+    margin-left: 48px;
+}
 #range2{
     margin-top: 10px;
 }
