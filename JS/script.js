@@ -1,3 +1,4 @@
+
 /** @type {HTMLCanvasElement} */
 
 canvas = document.getElementById("canvas");
@@ -37,67 +38,112 @@ let deslocamentoIn;
 let movimentoSuculento = 0;
 let tempo = 0;
 let atrito = 0;
-let coeficienteAtritoEst = 0.5;
-let coeficienteAtritoCin = 0.4;
+let coeficienteAtritoEst = 0;
+let coeficienteAtritoCin = 0;
 let taEncostado = true;
 let continuaAndando = true;
+let stop = false;
+
 
 // função responsável por pegar o valor da força aplicada, através do input
 
+
+
+
 // função responsável por pegar o valor do atrito, através do input
-    const sliderAtrito = document.getElementById('sliderAtrito');
-    sliderAtrito.value = atrito;
-    
-    const showAtrito = document.getElementById('showAtrito');
-    showAtrito.innerHTML = atrito;
-    
-    sliderAtrito.addEventListener('change', function(e){
-        atrito = e.target.value;
-        console.log(atrito);
-        showAtrito.innerHTML = e.target.value;
-    });
+   // slider força aplicada ------------
+   const sliderForcaAplicada = document.getElementById('custom-slider');
+   sliderForcaAplicada.value = forcaAplicada;
 
-    const slider = document.getElementById('slider');
-    slider.value = forcaAplicada;
-    
-    const showGameSpeed = document.getElementById('showGameSpeed');
-    showGameSpeed.innerHTML = forcaAplicada;
-    
-    slider.addEventListener('change', function(e){
-        forcaAplicada = e.target.value;
-        showGameSpeed.innerHTML = e.target.value;
-    });
+   const showForcaAplicada = document.getElementById('current-fa');
+   showForcaAplicada.innerHTML = forcaAplicada;
 
-    // gravidade
-    const sliderGravidade = document.getElementById('sliderGravidade');
-    sliderGravidade.value = gravidade;
-    const showGravidade = document.getElementById('showGravidade');
-    showGravidade.innerHTML = gravidade;
-    
-    sliderGravidade.addEventListener('change', function(e){
-        gravidade = e.target.value;
-        console.log("Gravidade: ", gravidade);
-        showGravidade.innerHTML = e.target.value;
-    });
+   sliderForcaAplicada.addEventListener('input', function(e){
+       forcaAplicada = e.target.value;
+       showForcaAplicada.innerText = e.target.value;
+    //    showForcaAplicada.classList.add("active");
+    //    showForcaAplicada.style.left = `${e.target.value/2}%`;
+       console.log("FORCA APLICADA: ", forcaAplicada);
 
-    // massa
-    const sliderMassa = document.getElementById('sliderMassa');
-    sliderMassa.value = massa;
-    const showMassa = document.getElementById('showMassa');
-    showMassa.innerHTML = massa;
-     
-    sliderMassa.addEventListener('change', function(e){
-        massa = e.target.value;
-        console.log("Massa: ", massa);
-        showMassa.innerHTML = e.target.value;
-    });
+       
+    document.getElementById("seta").style.width = `${forcaAplicada}px`;
+    document.getElementById("seta").style.height = "30px";
+   });
 
-    //velocimetro
-    const showVelocimetro = document.querySelector(".velocimetro");
+   sliderForcaAplicada.addEventListener("blur", function(e){
+       showForcaAplicada.classList.remove("active");
+   });
 
-    function setVelocimetroValue(velocidade, valor){
-        velocidade.querySelector(".velocimetro__cover").textContent = Math.round(valor) + " m/s";
-    }
+
+  // slider coeficiente de atrito
+   const sliderAtrito = document.getElementById('custom-slider_atrito');
+   sliderAtrito.value = coeficienteAtritoEst;
+
+   const showAtrito = document.getElementById('current-atrito');
+   showAtrito.innerHTML = coeficienteAtritoEst;
+
+   sliderAtrito.addEventListener('input', function(e){
+       coeficienteAtritoEst = e.target.value;
+       coeficienteAtritoCin = coeficienteAtritoEst - (coeficienteAtritoEst/10);
+       showAtrito.innerText = e.target.value;
+    //    showAtrito.classList.add("active");
+    //    showAtrito.style.left = `${e.target.value/2}%`;
+       console.log("ATRITO: ", atrito);
+   });
+
+   sliderAtrito.addEventListener("blur", function(e){
+       showAtrito.classList.remove("active");
+   });
+
+   // slider gravidade
+   const sliderGravidade = document.getElementById('custom-slider_gravidade');
+   sliderGravidade.value = gravidade;
+
+   const showGravidade = document.getElementById('current-gravidade');
+   showGravidade.innerHTML = gravidade;
+
+   sliderGravidade.addEventListener('input', function(e){
+       gravidade = e.target.value;
+       showGravidade.innerText = e.target.value;
+    //    showAtrito.classList.add("active");
+    //    showAtrito.style.left = `${e.target.value/2}%`;
+       console.log("GRAVIDADE: ", gravidade);
+
+       document.getElementById("seta2").style.width = `${gravidade}px`;
+       document.getElementById("seta2").style.height = "30px";
+   });
+
+   sliderGravidade.addEventListener("blur", function(e){
+       showGravidade.classList.remove("active");
+   });
+
+   // slider massa
+   const sliderMassa = document.getElementById('custom-slider_massa');
+   sliderMassa.value = massa;
+
+   const showMassa = document.getElementById('current-massa');
+   showMassa.innerHTML = massa;
+
+   sliderMassa.addEventListener('input', function(e){
+       massa = e.target.value;
+       showMassa.innerText = e.target.value;
+    //    showAtrito.classList.add("active");
+    //    showAtrito.style.left = `${e.target.value/2}%`;
+       console.log("MASSA: ", massa);
+   });
+
+   sliderMassa.addEventListener("blur", function(e){
+       showMassa.classList.remove("active");
+   });
+
+   //velocimetro
+   const showVelocimetro = document.querySelector(".velocimetro");
+
+   function setVelocimetroValue(velocidade, valor){
+       velocidade.querySelector(".velocimetro__cover").textContent = Math.round(valor) + " m/s";
+   }
+
+   
     
 //função responsável por obter quais teclas estão sendo precionadas
 class InputHandler{
@@ -270,8 +316,9 @@ function velo(){
 
 function desaceleracao(){
     let desaceleracao;
-    desaceleracao = (0 - 250) / 500;
+    desaceleracao = forcaResultante()/massa;
 
+    console.log("DESACELERA: ", desaceleracao);
     return desaceleracao;
 }
 
@@ -295,22 +342,23 @@ function deslocamento(){
 function calculoMovimentacao(){
     contador++;
         if(forcaAplicada > fatEstatico()){
-            if(movimentoSuculento <= 150 && taEncostado == true && contador%24==0){
+            if(movimentoSuculento <= 100 && taEncostado == true && contador%24==0){
                 movimentoSuculento += aceleracao(); 
                 console.log(aceleracao());
                 console.log(movimentoSuculento);
                 setVelocimetroValue(showVelocimetro, movimentoSuculento);
-                //testando();
+                //testando();  
             }
-            else if(contador %24 == 0){
-                movimentoSuculento += desaceleracao();
-                console.log(movimentoSuculento);
-                setVelocimetroValue(showVelocimetro, movimentoSuculento);
-            }
+        }
+        else if(contador %24 == 0 || movimentoSuculento > 150){
+            movimentoSuculento += desaceleracao();
+            console.log(movimentoSuculento);
+            setVelocimetroValue(showVelocimetro, movimentoSuculento);
 
-            if(movimentoSuculento < 0){
+            if(movimentoSuculento <= 0){
                 movimentoSuculento = 0;
-            }
+                setVelocimetroValue(showVelocimetro, movimentoSuculento);
+            } 
         }
         return movimentoSuculento;
 }
@@ -361,6 +409,7 @@ function animate(){
     }else{
         robot.update(input);
         taEncostado = false;
+        forcaAplicada = 0;
         requestAnimationFrame(animate);
     }
 }
