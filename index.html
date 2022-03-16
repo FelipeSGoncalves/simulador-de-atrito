@@ -14,6 +14,11 @@
 <body>
     <!-- Criação da interface do usuario-->
     <div class="display">
+
+        <div class="arrow-1" id="seta"></div>
+        <div class="arrow-2" id="seta2"></div>
+
+
         <div class="velocimetro">
             <h1 class="velocimetro__cover"> 0 m/s</h1>
         </div>
@@ -21,57 +26,63 @@
         <div class="layer">
             <div class="column">
                 <!-- Criação do botão responsável pelo input da força aplicada-->     
-                <div class="range" id="range1">
-                    <p> Força aplicada </p>
-                    <div class="sliderValue">
-                        <span id="showGameSpeed"> 100 </span>
-                    </div>
-                    <div class="field">
-                        <div class="value left"> 0N </div>
-                        <input type="range" min="0" max="100" value="0" step="1" id="slider">
-                        <div class="value right"> 100N </div>
-                    </div>
-                </div>
-                <!-- Criação do botão responsável pelo input do coeficiente de atrito-->
-                <div class="range" id="range2">
-                <p> Atrito </p>
-                        <div class="sliderValue">
-                            <span id="showAtrito"> 100 </span>
+                    <div class="slider">
+                        <div class="show-value">
+                            <span id="current-fa">0</span>
                         </div>
-                        <div class="field">
-                            <div class="value left"> 0u </div>
-                            <input type="range" min="0" max="1" value="0" step="0.01" id="sliderAtrito">
-                            <div class="value right"> 1u </div>
+                        <input type="range" id="custom-slider" min="0" max="200" value="0" step="1">
+                        <div class="range">
+                            <div>0</div>
+                            <div>Força Aplicada</div>
+                            <div>200 N</div>
+                        </div>
+                    </div>
+                <!-- Criação do botão responsável pelo input do coeficiente de atrito-->
+                    <div class="slider">
+                        <div class="show-value">
+                            <span id="current-atrito">0</span>
+                        </div>
+                        <input type="range" id="custom-slider_atrito" min="0" max="1" value="0" step="0.1">
+                        <div class="range">
+                            <div>0</div>
+                            <div>Coeficiente de Atrito</div>
+                            <div>1 u</div>
                         </div>
                     </div>
             </div>
+
+
             <div class="column" id="column2">
-                <div class="range" id="range1">
-                    <p> Gravidade </p>
-                    <div class="sliderValue">
-                        <span id="showGravidade"> 100 </span>
+               <!-- Criação do botão responsável pelo input da força aplicada-->     
+                <div class="slider">
+                    <div class="show-value">
+                        <span id="current-gravidade">0</span>
                     </div>
-                    <div class="field">
-                        <div class="value left"> 0m/s² </div>
-                        <input type="range" min="0" max="100" value="0" step="1" id="sliderGravidade">
-                        <div class="value right"> 100m/s² </div>
+                    <input type="range" id="custom-slider_gravidade" min="0" max="100" value="0" step="1">
+                    <div class="range">
+                        <div>0</div>
+                        <div>Gravidade</div>
+                        <div>100 m/s²</div>
                     </div>
-                </div>  
+                </div>
                 <!-- Criação do botão responsável pelo input do coeficiente de atrito-->
-                <div class="range" id="range2">
-                    <p> Massa da Caixa </p>
-                    <div class="sliderValue">
-                        <span id="showMassa"> 100 </span>
+                <div class="slider">
+                    <div class="show-value">
+                        <span id="current-massa">0</span>
                     </div>
-                    <div class="field">
-                        <div class="value left"> 0kg </div>
-                        <input type="range" min="0" max="100" value="0" step="1" id="sliderMassa">
-                        <div class="value right"> 100kg </div>
+                    <input type="range" id="custom-slider_massa" min="1" max="50" value="0" step="1">
+                    <div class="range">
+                        <div>1</div>
+                        <div>Massa</div>
+                        <div>50 kg</div>
                     </div>
                 </div>
             </div>
             <div class="column">
-           
+                <div class="button">
+                    <p>The program has stopped</p>
+                    <button> Stop </button>
+                   
                 </div>
             </div>
         </div>

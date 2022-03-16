@@ -29,6 +29,33 @@ canvas{
     z-index: 0; 
 }
 
+.arrow-1 {
+    width:0px;
+    height:0px;
+    display: flex;
+    position: absolute;
+    top: 35%;
+    left: 47%;
+    padding-left: 40px;
+    transform: translate(-50%, -50%);
+    background: white;
+    width:50px;
+    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
+}
+.arrow-2 {
+    width: 50px;
+    height: 30px;
+    background: white;
+    display: block;
+    position: absolute;
+    top: 30%;
+    left: 52%;
+    padding-left: 40px;
+    transform: translate(-50%, -50%);
+    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
+    transform: rotate(90deg);
+}
+
 .display{
     position: absolute;
     width: 1400px;
@@ -78,93 +105,89 @@ canvas{
     margin-top: 5px;
 }
 
-.range{
-    font-size: 20px;
-    height: 50%;
-    width: 80%;
-    display: inline-block;
+.slider{
+    width: 400px;
+    height: 100px;
 }
 
-.range .sliderValue{
+.slider .show-value{
     position: relative;
     width: 100%;
+    height: 55px;
 }
 
-.range .sliderValue span{
+.slider .show-value span{
     position: absolute;
-    height: 45px;
-    width: 45px;
     font-size: 20px;
+    top: 40%;
+    width: 37px;
+    height: 37px;
+    /* background: #f5f5f5; */
     color: #fff;
-    font-weight: 500;
-    top: -40px;
-    transform: translateX(-50%);
-    line-height: 55px;
-    z-index: 2;
+    text-align: center;
+    line-height: 45px;
+    border-radius: 50%;
+    left: 50%;
+    /* transform: translateX(-50%) scale(0);
+    transform-origin: bottom;
+    transition: transform 300mx ease-in-out; */
 }
 
-/* .range .sliderValue span:after{
-    position: absolute;
-    content: "";
-    height: 45px;
-    width: 45px;
-    background: red;
-    left: 50%;
-    transform: translate(-50%) rotate(45deg);
-    border: 3px solid #fff;
-
-    border-top-left-radius: 50%;
-    border-top-right-radius: 50%;
-    border-bottom-left-radius: 50%;
-
-    z-index: -1;
+/* .slider .show-value span.active{
+    transform: translateX(-50%) scale(1);
 } */
 
-.range .field{
-    position: relative;
-    display: flex;
-    background-color: #fff;
-    justify-content: center;
-    z-index: 2;
-}
-
-.range .field .value{
-    position: absolute;
-    font-size: 18px;
-    color: #fff;
-}
-
-.range .field .value.left{
-    left:  -22px;
-}
-
-.range .field .value.right{
-    right: -43px;
-}
-
-.range .field input{
+.slider input[type="range"]{
     -webkit-appearance: none;
-    height: 3px;
     width: 100%;
-    background: #fff;
-    border-radius: 5px;
+    height: 2px;
+    background: #f5f5f5;
+    border-radius: 2px;
     outline: none;
     border: none;
 }
 
-.range .field input::-webkit-slider-thumb{
+.slider input[type="range"]::-webkit-slider-thumb{
     -webkit-appearance: none;
-    height: 20px;
-    width: 20px;
-    background: #664AFF;
-    border-radius: 50%;
-    border: 1px solid #664AFF;
+    width: 15px;
+    height: 30px;
+    background: #f5f5f5;
+    border-radius: 10px;
     cursor: pointer;
 }
+
+.slider .range{
+    margin-top: 15px;
+    position: relative;
+}
+
+.slider .range div{
+    position: absolute;
+    color: #ddd;
+    font-weight: 600;
+}
+
+.slider .range div:nth-child(2){
+    right: 35%;
+}
+
+.slider .range div:nth-child(3){
+    right: 0px;
+}
+
 
 #column2{
     margin-right: 48px;
     margin-left: 48px;
 }
 
+.button {
+    width: 100%;
+    text-align: center;
+    text-decoration: none;
+}
+
+button{
+    width: 100px;
+}
     
