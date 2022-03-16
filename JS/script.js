@@ -99,124 +99,7 @@ let continuaAndando = true;
         velocidade.querySelector(".velocimetro__cover").textContent = Math.round(valor) + " m/s";
     }
     
-//função responsável por obter quais teclas estão sendo precionadas
-class InputHandler{
-    constructor(){
-        this.keys = [];
-        window.addEventListener('keydown', e =>{
-            if((e.key === 'ArrowDown' ||
-                e.key === 'ArrowUp' ||
-                e.key === 'ArrowLeft' ||
-                e.key === 'ArrowRight')
-                && this.keys.indexOf(e.key) === -1){
-                    this.keys.push(e.key);
-            }
-        });
-        window.addEventListener('keyup', e =>{
-            if( e.key === 'ArrowDown' ||
-                e.key === 'ArrowUp' ||
-                e.key === 'ArrowLeft' ||
-                e.key === 'ArrowRight'){
-                    this.keys.splice(this.keys.indexOf(e.key), 1);
-            }
-        });
-    }
-}
 
-class Background{
-    constructor(image, speedModifier){
-        this.image = image;
-        this.width = CANVAS_WIDTH;
-        this.height = CANVAS_HEIGHT;
-        this.x = 0;
-        this.x2 = this.width;
-        this.y = 0;
-        this.speedModifier = speedModifier;
-        this.speed = calculoMovimentacao() * this.speedModifier;
-    }
-    update(){
-        this.speed = calculoMovimentacao() * this.speedModifier;         
-            if(this.x <= -this.width){
-                this.x = this.width + this.x2 - this.speed;
-            }
-            if(this.x2 <= -this.width){
-                this.x2 = this.width + this.x - this.speed;
-            }
-            this.x = Math.floor(this.x - this.speed);
-            this.x2 = Math.floor(this.x2 - this.speed)
-    }
-    draw(){
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-        ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
-    }
-}
-
-class Layer{
-    constructor(image){
-        this.image = image;
-        this.width = CANVAS_WIDTH;
-        this.height = CANVAS_HEIGHT;
-        this.x = 0;
-        this.y = 0;
-    }
-    draw(){
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    }
-}
-
-class Box{
-    constructor(image){
-        this.width = 150;
-        this.height = 150;
-        this.x = CANVAS_WIDTH/2;
-        this.y = 305;
-        this.image = image;
-    }   
-    draw(){
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    } 
-}
-class Robot{
-    constructor(image){
-        this.width = 217;
-        this.height = 200;
-        this.x = 0;
-        this.y = CANVAS_HEIGHT - 450;
-        this.image = image;
-        this.Framex = 0;
-        this.Framey= 0;
-        this.speed = 0;
-        this.vy =0;
-        this.weight = 1;
-        this.tempo = 0;
-        
-    }
-    draw(context){
-        ctx.fillStyle = 'transparent';
-        context.fillRect(this.x, this.y, this.width, this. height);
-        context.drawImage(this.image, this.x, this.y, this.width, this.height);
-    }
-    colide(){
-        if(this.x + this.width > (CANVAS_WIDTH/2)){
-            if(this.x + this.width > (CANVAS_WIDTH/2)){
-                this.x -= ((this.x + this.width) - (CANVAS_WIDTH/2)) - 1; 
-            }
-            return true;
-        }else{
-            return false;
-        }
-        
-    }
-    update(input){ 
-            if(input.keys.indexOf('ArrowRight') > -1){
-                this.speed = 5;
-            }else if(input.keys.indexOf('ArrowLeft') > -1){
-                this.speed = -5;
-            }
-            this.x += this.speed;
-            if(this.x < -this.width) this.x = -this.width;     
-    }    
-}
 
 // funções responsaveis pelos calculos
 
@@ -314,11 +197,136 @@ function calculoMovimentacao(){
         }
         return movimentoSuculento;
 }
+class Background{
+    constructor(image, speedModifier){
+        this.image = image;
+        this.width = CANVAS_WIDTH;
+        this.height = CANVAS_HEIGHT;
+        this.x = 0;
+        this.x2 = this.width;
+        this.x3 = 2*this.width;
+        this.y = 0;
+        this.speedModifier = speedModifier;
+        this.speed = calculoMovimentacao() * this.speedModifier;
+    }
+    update(){
+        this.speed = calculoMovimentacao() * this.speedModifier;         
+            if(this.x <= -this.width){
+                this.x = this.width + this.x3 - this.speed;
+            }
+            if(this.x2 <= -this.width){
+                this.x2 = this.width + this.x - this.speed;
+            }
+            if(this.x3 <= -this.width){
+                this.x3 = this.width + this.x2 - this.speed;
+            }
+            this.x = Math.floor(this.x - this.speed);
+            this.x2 = Math.floor(this.x2 - this.speed)
+            this.x3 = Math.floor(this.x3 - this.speed)
+    }
+    draw(){
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x3, this.y, this.width, this.height);
+    }
+}
+
+class Layer{
+    constructor(image){
+        this.image = image;
+        this.width = CANVAS_WIDTH;
+        this.height = CANVAS_HEIGHT;
+        this.x = 0;
+        this.y = 0;
+    }
+    draw(){
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+}
+
+class Box{
+    constructor(image){
+        this.width = 150;
+        this.height = 150;
+        this.x = CANVAS_WIDTH/2;
+        this.y = 305;
+        this.image = image;
+    }   
+    draw(){
+        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    } 
+}
+class Robot{
+    constructor(image){
+        this.width = 217;
+        this.height = 200;
+        this.x = 0;
+        this.y = CANVAS_HEIGHT - 450;
+        this.image = image;
+        this.Framex = 0;
+        this.Framey= 0;
+        this.speed = 0;
+        this.vy =0;
+        this.weight = 1;
+        this.tempo = 0;
+        
+    }
+    draw(context){
+        ctx.fillStyle = 'transparent';
+        context.fillRect(this.x, this.y, this.width, this. height);
+        context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+    colide(){
+        if(this.x + this.width > (CANVAS_WIDTH/2)){
+            if(this.x + this.width > (CANVAS_WIDTH/2)){
+                this.x -= ((this.x + this.width) - (CANVAS_WIDTH/2)) - 1; 
+            }
+            return true;
+        }else{
+            return false;
+        }
+        
+    }
+    update(input){ 
+            
+            if(input.keys.indexOf('ArrowRight') > -1){
+                this.speed = 5;
+            }else if(input.keys.indexOf('ArrowLeft') > -1){
+                this.speed = -5;
+            }
+            this.x += this.speed;
+            if(this.x < -this.width) this.x = -this.width;     
+    }    
+}
+
+//função responsável por obter quais teclas estão sendo precionadas
+class InputHandler{
+    constructor(){
+        this.keys = [];
+        window.addEventListener('keydown', e =>{
+            if((e.key === 'ArrowDown' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'ArrowRight')
+                && this.keys.indexOf(e.key) === -1){
+                    this.keys.push(e.key);
+            }
+        });
+        window.addEventListener('keyup', e =>{
+            if( e.key === 'ArrowDown' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'ArrowRight'){
+                    this.keys.splice(this.keys.indexOf(e.key), 1);
+            }
+        });
+    }
+}
 
 const input = new InputHandler();
 const background = new Background(backgroundImage, 0.01);
-const tower = new Background(towerImage, 0.4);
-const floor = new Background(floorImage, 1);
+const tower = new Background(towerImage, 0.2);
+const floor = new Background(floorImage, 0.6);
 const layer = new Layer(layerImage);
 const box = new Box(boxImage);
 const robot = new Robot(robotImage);
@@ -338,7 +346,7 @@ function start(){
     let x = robot.colide();
     if(x == true){
         console.log(x);
-        animate();
+        animate();  
     }else{
         requestAnimationFrame(start);
         console.log(x);
