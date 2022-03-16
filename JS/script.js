@@ -218,6 +218,8 @@ class Robot{
             if(this.x + this.width > (CANVAS_WIDTH/2)){
                 this.x -= ((this.x + this.width) - (CANVAS_WIDTH/2)) - 1; 
             }
+        }else{
+            true
         }
     }
     update(input){ 
@@ -341,17 +343,17 @@ const robot = new Robot(robotImage);
 
 const gameBackground = [background, tower, floor];
 
-function animate(){
+function start(){
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-    layer.draw();
     gameBackground.forEach(object => {
-        object.update();
         object.draw();
-    }); 
+    });
+    layer.draw();
     box.draw();
     robot.draw(ctx);
     robot.colide();
     robot.update(input);
-    requestAnimationFrame(animate);
+    requestAnimationFrame(start);
 }
-animate();
+
+start();
