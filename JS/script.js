@@ -44,23 +44,6 @@ let continuaAndando = true;
 
 // função responsável por pegar o valor da força aplicada, através do input
 
-    const btn = document.querySelector("button");
-    const txt = document.querySelector("p");
-    btn.addEventListener("click", updateBtn);
-
-    function updateBtn() {
-        if (btn.textContent === "Start Machine") {
-            btn.textContent = "Stop Machine";
-            txt.textContent = "The Machine has Started";
-            taEncostado = true;
-        } else {
-            btn.textContent = "Start Machine";
-            txt.textContent = "The Machine is Stopped";
-            taEncostado = false;
-        }
-    }
-
-
 // função responsável por pegar o valor do atrito, através do input
     const sliderAtrito = document.getElementById('sliderAtrito');
     sliderAtrito.value = atrito;
@@ -197,7 +180,7 @@ class Robot{
     constructor(image){
         this.width = 217;
         this.height = 200;
-        this.x = CANVAS_WIDTH - 200;
+        this.x = 0;
         this.y = CANVAS_HEIGHT - 450;
         this.image = image;
         this.Framex = 0;
@@ -218,22 +201,21 @@ class Robot{
             if(this.x + this.width > (CANVAS_WIDTH/2)){
                 this.x -= ((this.x + this.width) - (CANVAS_WIDTH/2)) - 1; 
             }
+            return true;
         }else{
-            true
+            return false;
         }
+        
     }
     update(input){ 
             if(input.keys.indexOf('ArrowRight') > -1){
                 this.speed = 5;
             }else if(input.keys.indexOf('ArrowLeft') > -1){
                 this.speed = -5;
-            }else{
-                this.speed = 0;
             }
             this.x += this.speed;
-            if(this.x < 0) this.x = 0;
-            else if (this.x > CANVAS_WIDTH - this.width) this.x = CANVAS_WIDTH - this.width;       
-    }   
+            if(this.x < -this.width) this.x = -this.width;     
+    }    
 }
 
 // funções responsaveis pelos calculos
@@ -343,6 +325,7 @@ const robot = new Robot(robotImage);
 
 const gameBackground = [background, tower, floor];
 
+
 function start(){
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
     gameBackground.forEach(object => {
@@ -351,9 +334,35 @@ function start(){
     layer.draw();
     box.draw();
     robot.draw(ctx);
-    robot.colide();
     robot.update(input);
-    requestAnimationFrame(start);
+    let x = robot.colide();
+    if(x == true){
+        console.log(x);
+        animate();
+    }else{
+        requestAnimationFrame(start);
+        console.log(x);
+    }
+}
+
+function animate(){
+    ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+    gameBackground.forEach(object => {
+        object.draw();
+        object.update();
+    });
+    layer.draw();
+    box.draw();
+    robot.update(input);
+    robot.draw(ctx);
+    let x = robot.colide();
+    if(x == true){
+        requestAnimationFrame(animate);
+    }else{
+        robot.update(input);
+        taEncostado = false;
+        requestAnimationFrame(animate);
+    }
 }
 
 start();
