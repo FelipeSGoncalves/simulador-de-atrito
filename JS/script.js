@@ -9,22 +9,22 @@ const CANVAS_HEIGHT = canvas.height = 720;
 
 // declaração das imagens
 const backgroundImage = new Image();
-backgroundImage.src = '../IMG/terra/background.png';
+backgroundImage.src = './IMG/terra/background.png';
 
 const towerImage = new Image();
-towerImage.src = '../IMG/terra/tower.png';
+towerImage.src = './IMG/terra/tower.png';
 
 const floorImage = new Image();
-floorImage.src = '../IMG/terra/floor.png';
+floorImage.src = './IMG/terra/floor.png';
 
 const layerImage = new Image();
-layerImage.src = '../IMG/terra/layer.png';
+layerImage.src = './IMG/terra/layer.png';
 
 const robotImage = new Image();
-robotImage.src = '../IMG/robot_player.png';
+robotImage.src = './IMG/robot_player.png';
 
 const boxImage = new Image();
-boxImage.src = '../IMG/wooden_box.png';
+boxImage.src = './IMG/wooden_box.png';
 
 //declaração de variaveis
 let gameSpeed = 0;
@@ -66,8 +66,10 @@ let stop = false;
        console.log("FORCA APLICADA: ", forcaAplicada);
 
        
-    document.getElementById("seta").style.width = `${forcaAplicada}px`;
+    document.getElementById("seta").style.width = `${forcaAplicada/2}px`;
     document.getElementById("seta").style.height = "30px";
+    document.getElementById("valorSeta1").style.fontSize = "25px";
+    document.getElementById("valorSeta1").innerText = `${forcaAplicada}N`;
    });
 
    sliderForcaAplicada.addEventListener("blur", function(e){
@@ -86,8 +88,10 @@ let stop = false;
        coeficienteAtritoEst = e.target.value;
        coeficienteAtritoCin = coeficienteAtritoEst - (coeficienteAtritoEst/10);
        showAtrito.innerText = e.target.value;
-    //    showAtrito.classList.add("active");
-    //    showAtrito.style.left = `${e.target.value/2}%`;
+        
+    
+        document.getElementById("seta2").style.width = `${fatEstatico()}px`;
+        document.getElementById("seta2").style.height = "30px";
        console.log("ATRITO: ", atrito);
    });
 
@@ -109,8 +113,6 @@ let stop = false;
     //    showAtrito.style.left = `${e.target.value/2}%`;
        console.log("GRAVIDADE: ", gravidade);
 
-       document.getElementById("seta2").style.width = `${gravidade}px`;
-       document.getElementById("seta2").style.height = "30px";
    });
 
    sliderGravidade.addEventListener("blur", function(e){
@@ -176,7 +178,6 @@ class Background{
         this.height = CANVAS_HEIGHT;
         this.x = 0;
         this.x2 = this.width;
-        this.x3 = 2*this.width;
         this.y = 0;
         this.speedModifier = speedModifier;
         this.speed = calculoMovimentacao() * this.speedModifier;
@@ -185,22 +186,16 @@ class Background{
         this.speed = calculoMovimentacao() * this.speedModifier;         
             if(this.x <= -this.width){
                 this.x = this.width + this.x2 - this.speed;
-                this.x = this.width + this.x3 - this.speed;
             }
             if(this.x2 <= -this.width){
                 this.x2 = this.width + this.x - this.speed;
             }
-            if(this.x3 <= -this.width){
-                this.x3 = this.width + this.x2 - this.speed;
-            }
             this.x = Math.floor(this.x - this.speed);
             this.x2 = Math.floor(this.x2 - this.speed)
-            this.x3 = Math.floor(this.x3 - this.speed)
     }
     draw(){
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
-        ctx.drawImage(this.image, this.x3, this.y, this.width, this.height);
     }
 }
 
@@ -231,7 +226,7 @@ class Box{
 }
 class Robot{
     constructor(image){
-        this.width = 170;
+        this.width = 217;
         this.height = 200;
         this.x = 0;
         this.y = CANVAS_HEIGHT - 450;
@@ -302,7 +297,7 @@ function forcaResultante(){
     let forcaRes;
     forcaRes = forcaAplicada - fatCinetico();
 
-    return forcaRes;
+    return Math.round(forcaRes);
 }
 
 // calculo da aceleração
@@ -348,19 +343,36 @@ function deslocamento(){
 
 function calculoMovimentacao(){
     contador++;
+
         if(forcaAplicada > fatEstatico()){
             if(movimentoSuculento <= 100 && taEncostado == true && contador%24==0){
                 movimentoSuculento += aceleracao(); 
-                console.log("Aceleração: ",aceleracao());
-                console.log("MovimentoSuc: ",movimentoSuculento);
+                console.log(aceleracao());
+                console.log(movimentoSuculento);
                 setVelocimetroValue(showVelocimetro, movimentoSuculento);
-                //testando();  
+                
             }
+
+            document.getElementById("seta3").style.width = `${forcaResultante()}px`;
+            document.getElementById("seta3").style.height = "30px";
+            document.getElementById("seta3").style.background = "green";
+
+            document.getElementById("valorSeta2").style.fontSize = "20px";
+            document.getElementById("valorSeta2").innerText = `${forcaResultante()}N`;
         }
-        else if(contador %24 == 0 || movimentoSuculento > 100){
+        else if(contador %24 == 0 || movimentoSuculento > 150){
             movimentoSuculento += desaceleracao();
-            console.log("movimentoSuc",movimentoSuculento);
+
+            console.log(movimentoSuculento);
             setVelocimetroValue(showVelocimetro, movimentoSuculento);
+
+            document.getElementById("seta3").setAttribute("style", "transform: rotate(180deg)");
+            document.getElementById("seta3").style.width = `${-forcaResultante()/5}px`;
+            document.getElementById("seta3").style.height = "30px";
+            document.getElementById("seta3").style.background = "red";
+
+            document.getElementById("valorSeta2").style.fontSize = "20px";
+            document.getElementById("valorSeta2").innerText = `${-forcaResultante()}N`;
 
             if(movimentoSuculento <= 0){
                 movimentoSuculento = 0;
