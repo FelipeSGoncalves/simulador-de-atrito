@@ -199,19 +199,6 @@ class Background{
     }
 }
 
-class Layer{
-    constructor(image){
-        this.image = image;
-        this.width = CANVAS_WIDTH;
-        this.height = CANVAS_HEIGHT;
-        this.x = 0;
-        this.y = 0;
-    }
-    draw(){
-        ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-    }
-}
-
 class Box{
     constructor(image){
         this.width = 150;
@@ -386,11 +373,11 @@ const input = new InputHandler();
 const background = new Background(backgroundImage, 0.01);
 const tower = new Background(towerImage, 0.4);
 const floor = new Background(floorImage, 1);
-const layer = new Layer(layerImage);
+const layer = new Background(layerImage, 1);
 const box = new Box(boxImage);
 const robot = new Robot(robotImage);
 
-const gameBackground = [background, tower, floor];
+const gameBackground = [background, tower, floor, layer];
 
 
 function start(){
@@ -398,7 +385,6 @@ function start(){
     gameBackground.forEach(object => {
         object.draw();
     });
-    layer.draw();
     box.draw();
     robot.draw(ctx);
     robot.update(input);
@@ -418,7 +404,6 @@ function animate(){
         object.draw();
         object.update();
     });
-    layer.draw();
     box.draw();
     robot.update(input);
     robot.draw(ctx);
