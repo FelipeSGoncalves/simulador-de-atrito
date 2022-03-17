@@ -82,8 +82,8 @@ boxImage.src = './IMG/wooden_box.png';
         showAtrito.innerText = e.target.value;
             
         
-            document.getElementById("seta2").style.width = `${fatEstatico()}px`;
-            document.getElementById("seta2").style.height = "30px";
+            document.getElementById("seta3").style.width = `${fatEstatico()}px`;
+            document.getElementById("seta3").style.height = "30px";
         console.log("ATRITO: ", atrito);
     });
 
@@ -214,10 +214,9 @@ boxImage.src = './IMG/wooden_box.png';
 
 
     function calculoMovimentacao(){
-        contador++;
-
+        contador++; 
             if(forcaAplicada > fatEstatico()){
-                if(movimentoSuculento <= 100 && taEncostado == true && contador%24==0){
+                if(movimentoSuculento <= 150 && taEncostado == true && contador%24==0){
                     movimentoSuculento += aceleracao(); 
                     console.log(aceleracao());
                     console.log(movimentoSuculento);
@@ -225,9 +224,10 @@ boxImage.src = './IMG/wooden_box.png';
                     
                 }
 
-                document.getElementById("seta3").style.width = `${forcaResultante()}px`;
-                document.getElementById("seta3").style.height = "30px";
-                document.getElementById("seta3").style.background = "green";
+                document.getElementById("seta2").style.width = `${forcaResultante()}px`;
+                document.getElementById("seta2").style.height = "30px";
+                document.getElementById("seta2").style.background = "green";
+                document.getElementById("seta2").style.transform = "rotate(0deg)";
 
                 document.getElementById("valorSeta2").style.fontSize = "20px";
                 document.getElementById("valorSeta2").innerText = `${forcaResultante()}N`;
@@ -238,10 +238,10 @@ boxImage.src = './IMG/wooden_box.png';
                 console.log(movimentoSuculento);
                 setVelocimetroValue(showVelocimetro, movimentoSuculento);
 
-                document.getElementById("seta3").setAttribute("style", "transform: rotate(180deg)");
-                document.getElementById("seta3").style.width = `${-forcaResultante()/5}px`;
-                document.getElementById("seta3").style.height = "30px";
-                document.getElementById("seta3").style.background = "red";
+                document.getElementById("seta2").setAttribute("style", "transform: rotate(180deg)");
+                document.getElementById("seta2").style.width = `${-forcaResultante()/5}px`;
+                document.getElementById("seta2").style.height = "30px";
+                document.getElementById("seta2").style.background = "red";
 
                 document.getElementById("valorSeta2").style.fontSize = "20px";
                 document.getElementById("valorSeta2").innerText = `${-forcaResultante()}N`;
@@ -294,7 +294,7 @@ class Box{
         this.width = 150;
         this.height = 150;
         this.x = CANVAS_WIDTH/2;
-        this.y = 305;
+        this.y = CANVAS_HEIGHT - 410;
         this.image = image;
     }   
     draw(){
@@ -305,8 +305,8 @@ class Robot{
     constructor(image){
         this.width = 170;
         this.height = 200;
-        this.x = 0;
-        this.y = CANVAS_HEIGHT - 450;
+        this.x = 400;
+        this.y = CANVAS_HEIGHT - 445;
         this.image = image;
         this.Framex = 0;
         this.Framey= 0;

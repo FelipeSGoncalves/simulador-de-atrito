@@ -22,6 +22,47 @@ canvas{
     z-index: 0; 
 }
 
+.arrow-1 {
+    width:0px;
+    height:0px;
+    display: block;
+    position: absolute;
+    top: 35%;
+    left: 47%;
+    font-size: 25px;
+    padding-left: 40px;
+    transform: translate(-50%, -50%);
+    background: rgb(138, 138, 138);
+    width:50px;
+    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
+}
+.arrow-2 {
+    width: 0px;
+    height: 0px;
+    background: white;
+    display: block;
+    position: absolute;
+    top: 52%;
+    left: 61%;
+    
+    padding-left: 40px;
+    transform: translate(-50%, -50%);
+    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
+    transform: rotate(180deg);
+}
+.arrow-3 {
+    width: 0px;
+    height: 0px;
+    background: white;
+    display: block;
+    position: absolute;
+    top: 61.5%;
+    left: 61%;
+    padding-left: 40px;
+    transform: translate(-50%, -50%);
+    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
+    transform: rotate(180deg);
+}
 .seta1-titulo{
     font-size: 0px;
     font-family: sans-serif;
@@ -39,51 +80,10 @@ canvas{
     color: white;
     display: flex;
     position: absolute;
-    top: 44%;
-    left: 65%;
+    top: 50%;
+    left: 62%;
     padding-left: 40px;
     transform: translate(-50%, -50%);
-}
-
-.arrow-1 {
-    width:0px;
-    height:0px;
-    display: block;
-    position: absolute;
-    top: 35%;
-    left: 47%;
-    font-size: 25px;
-    padding-left: 40px;
-    transform: translate(-50%, -50%);
-    background: white;
-    width:50px;
-    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
-}
-.arrow-2 {
-    width: 0px;
-    height: 0px;
-    background: white;
-    display: block;
-    position: absolute;
-    top: 53%;
-    left: 63%;
-    padding-left: 40px;
-    transform: translate(-50%, -50%);
-    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
-    transform: rotate(180deg);
-}
-.arrow-3 {
-    width: 0px;
-    height: 0px;
-    background: white;
-    display: block;
-    position: absolute;
-    top: 45%;
-    left: 63%;
-    padding-left: 40px;
-    transform: translate(-50%, -50%);
-    clip-path: polygon(0 10px,calc(100% - 15px) 10px,calc(100% - 15px) 0,100% 50%,calc(100% - 15px) 100%,calc(100% - 15px) calc(100% - 10px),0 calc(100% - 10px));
-    transform: rotate(0deg);
 }
 
 .display{
