@@ -9,22 +9,22 @@ const CANVAS_HEIGHT = canvas.height = 720;
 
 // declaração das imagens
 const backgroundImage = new Image();
-backgroundImage.src = './IMG/terra/background.png';
+backgroundImage.src = '../IMG/terra/background.png';
 
 const towerImage = new Image();
-towerImage.src = './IMG/terra/tower.png';
+towerImage.src = '../IMG/terra/tower.png';
 
 const floorImage = new Image();
-floorImage.src = './IMG/terra/floor.png';
+floorImage.src = '../IMG/terra/floor.png';
 
 const layerImage = new Image();
-layerImage.src = './IMG/terra/layer.png';
+layerImage.src = '../IMG/terra/layer.png';
 
 const robotImage = new Image();
-robotImage.src = './IMG/robot_player.png';
+robotImage.src = '../IMG/robot_player.png';
 
 const boxImage = new Image();
-boxImage.src = './IMG/wooden_box.png';
+boxImage.src = '../IMG/wooden_box.png';
 
 //declaração de variaveis
 let gameSpeed = 0;
@@ -176,6 +176,7 @@ class Background{
         this.height = CANVAS_HEIGHT;
         this.x = 0;
         this.x2 = this.width;
+        this.x3 = 2*this.width;
         this.y = 0;
         this.speedModifier = speedModifier;
         this.speed = calculoMovimentacao() * this.speedModifier;
@@ -184,16 +185,22 @@ class Background{
         this.speed = calculoMovimentacao() * this.speedModifier;         
             if(this.x <= -this.width){
                 this.x = this.width + this.x2 - this.speed;
+                this.x = this.width + this.x3 - this.speed;
             }
             if(this.x2 <= -this.width){
                 this.x2 = this.width + this.x - this.speed;
             }
+            if(this.x3 <= -this.width){
+                this.x3 = this.width + this.x2 - this.speed;
+            }
             this.x = Math.floor(this.x - this.speed);
             this.x2 = Math.floor(this.x2 - this.speed)
+            this.x3 = Math.floor(this.x3 - this.speed)
     }
     draw(){
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x3, this.y, this.width, this.height);
     }
 }
 
@@ -224,7 +231,7 @@ class Box{
 }
 class Robot{
     constructor(image){
-        this.width = 217;
+        this.width = 170;
         this.height = 200;
         this.x = 0;
         this.y = CANVAS_HEIGHT - 450;
@@ -344,15 +351,15 @@ function calculoMovimentacao(){
         if(forcaAplicada > fatEstatico()){
             if(movimentoSuculento <= 100 && taEncostado == true && contador%24==0){
                 movimentoSuculento += aceleracao(); 
-                console.log(aceleracao());
-                console.log(movimentoSuculento);
+                console.log("Aceleração: ",aceleracao());
+                console.log("MovimentoSuc: ",movimentoSuculento);
                 setVelocimetroValue(showVelocimetro, movimentoSuculento);
                 //testando();  
             }
         }
-        else if(contador %24 == 0 || movimentoSuculento > 150){
+        else if(contador %24 == 0 || movimentoSuculento > 100){
             movimentoSuculento += desaceleracao();
-            console.log(movimentoSuculento);
+            console.log("movimentoSuc",movimentoSuculento);
             setVelocimetroValue(showVelocimetro, movimentoSuculento);
 
             if(movimentoSuculento <= 0){
