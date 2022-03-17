@@ -7,6 +7,24 @@ ctx = canvas.getContext("2d");
 const CANVAS_WIDTH = canvas.width = 1400;
 const CANVAS_HEIGHT = canvas.height = 720;
 
+//declaração de variaveis
+let gameSpeed = 0;
+let contador = 0;
+// variaveis fundamentais para a fisica
+let massa = 5;
+let gravidade = 10;
+let forcaAplicada = 0;
+let velocidadeIn = 0;
+let deslocamentoIn;
+let movimentoSuculento = 0;
+let tempo = 0;
+let atrito = 0;
+let coeficienteAtritoEst = 0;
+let coeficienteAtritoCin = 0;
+let taEncostado = true;
+let continuaAndando = true;
+let stop = false;
+
 // declaração das imagens
 const backgroundImage = new Image();
 backgroundImage.src = './IMG/terra/background.png';
@@ -26,150 +44,215 @@ robotImage.src = './IMG/robot_player.png';
 const boxImage = new Image();
 boxImage.src = './IMG/wooden_box.png';
 
-//declaração de variaveis
-let gameSpeed = 0;
-let contador = 0;
-// variaveis fundamentais para a fisica
-let massa = 5;
-let gravidade = 10;
-let forcaAplicada = 0;
-let velocidadeIn = 0;
-let deslocamentoIn;
-let movimentoSuculento = 0;
-let tempo = 0;
-let atrito = 0;
-let coeficienteAtritoEst = 0;
-let coeficienteAtritoCin = 0;
-let taEncostado = true;
-let continuaAndando = true;
-let stop = false;
-
-
 // função responsável por pegar o valor da força aplicada, através do input
+    // slider força aplicada ------------
+    const sliderForcaAplicada = document.getElementById('custom-slider');
+    sliderForcaAplicada.value = forcaAplicada;
 
+    const showForcaAplicada = document.getElementById('current-fa');
+    showForcaAplicada.innerHTML = forcaAplicada;
 
+    sliderForcaAplicada.addEventListener('input', function(e){
+        forcaAplicada = e.target.value;
+        showForcaAplicada.innerText = e.target.value;
+            //showForcaAplicada.classList.add("active");
+            //showForcaAplicada.style.left = `${e.target.value/2}%`;
+        console.log("FORCA APLICADA: ", forcaAplicada);
+            document.getElementById("seta").style.width = `${forcaAplicada/2}px`;
+            document.getElementById("seta").style.height = "30px";
+            document.getElementById("valorSeta1").style.fontSize = "25px";
+            document.getElementById("valorSeta1").innerText = `${forcaAplicada}N`;
+    });
 
+    sliderForcaAplicada.addEventListener("blur", function(e){
+        showForcaAplicada.classList.remove("active");
+    });
 
 // função responsável por pegar o valor do atrito, através do input
-   // slider força aplicada ------------
-   const sliderForcaAplicada = document.getElementById('custom-slider');
-   sliderForcaAplicada.value = forcaAplicada;
+    // slider coeficiente de atrito
+    const sliderAtrito = document.getElementById('custom-slider_atrito');
+    sliderAtrito.value = coeficienteAtritoEst;
 
-   const showForcaAplicada = document.getElementById('current-fa');
-   showForcaAplicada.innerHTML = forcaAplicada;
+    const showAtrito = document.getElementById('current-atrito');
+    showAtrito.innerHTML = coeficienteAtritoEst;
 
-   sliderForcaAplicada.addEventListener('input', function(e){
-       forcaAplicada = e.target.value;
-       showForcaAplicada.innerText = e.target.value;
-    //    showForcaAplicada.classList.add("active");
-    //    showForcaAplicada.style.left = `${e.target.value/2}%`;
-       console.log("FORCA APLICADA: ", forcaAplicada);
-
-       
-    document.getElementById("seta").style.width = `${forcaAplicada/2}px`;
-    document.getElementById("seta").style.height = "30px";
-    document.getElementById("valorSeta1").style.fontSize = "25px";
-    document.getElementById("valorSeta1").innerText = `${forcaAplicada}N`;
-   });
-
-   sliderForcaAplicada.addEventListener("blur", function(e){
-       showForcaAplicada.classList.remove("active");
-   });
-
-
-  // slider coeficiente de atrito
-   const sliderAtrito = document.getElementById('custom-slider_atrito');
-   sliderAtrito.value = coeficienteAtritoEst;
-
-   const showAtrito = document.getElementById('current-atrito');
-   showAtrito.innerHTML = coeficienteAtritoEst;
-
-   sliderAtrito.addEventListener('input', function(e){
-       coeficienteAtritoEst = e.target.value;
-       coeficienteAtritoCin = coeficienteAtritoEst - (coeficienteAtritoEst/10);
-       showAtrito.innerText = e.target.value;
+    sliderAtrito.addEventListener('input', function(e){
+        coeficienteAtritoEst = e.target.value;
+        coeficienteAtritoCin = coeficienteAtritoEst - (coeficienteAtritoEst/10);
+        showAtrito.innerText = e.target.value;
+            
         
-    
-        document.getElementById("seta2").style.width = `${fatEstatico()}px`;
-        document.getElementById("seta2").style.height = "30px";
-       console.log("ATRITO: ", atrito);
-   });
+            document.getElementById("seta2").style.width = `${fatEstatico()}px`;
+            document.getElementById("seta2").style.height = "30px";
+        console.log("ATRITO: ", atrito);
+    });
 
-   sliderAtrito.addEventListener("blur", function(e){
-       showAtrito.classList.remove("active");
-   });
+    sliderAtrito.addEventListener("blur", function(e){
+        showAtrito.classList.remove("active");
+    });
 
-   // slider gravidade
-   const sliderGravidade = document.getElementById('custom-slider_gravidade');
-   sliderGravidade.value = gravidade;
+// função responsável por pegar o valor da gravidade, através do input
+    // slider gravidade
+    const sliderGravidade = document.getElementById('custom-slider_gravidade');
+    sliderGravidade.value = gravidade;
 
-   const showGravidade = document.getElementById('current-gravidade');
-   showGravidade.innerHTML = gravidade;
+    const showGravidade = document.getElementById('current-gravidade');
+    showGravidade.innerHTML = gravidade;
 
-   sliderGravidade.addEventListener('input', function(e){
-       gravidade = e.target.value;
-       showGravidade.innerText = e.target.value;
-    //    showAtrito.classList.add("active");
-    //    showAtrito.style.left = `${e.target.value/2}%`;
-       console.log("GRAVIDADE: ", gravidade);
+    sliderGravidade.addEventListener('input', function(e){
+        gravidade = e.target.value;
+        showGravidade.innerText = e.target.value;
+        //    showAtrito.classList.add("active");
+        //    showAtrito.style.left = `${e.target.value/2}%`;
+        console.log("GRAVIDADE: ", gravidade);
 
-   });
+    });
 
-   sliderGravidade.addEventListener("blur", function(e){
-       showGravidade.classList.remove("active");
-   });
+    sliderGravidade.addEventListener("blur", function(e){
+        showGravidade.classList.remove("active");
+    });
+// função responsável por pegar o valor da massa do objeto, através do input
+    // slider massa
+    const sliderMassa = document.getElementById('custom-slider_massa');
+    sliderMassa.value = massa;
 
-   // slider massa
-   const sliderMassa = document.getElementById('custom-slider_massa');
-   sliderMassa.value = massa;
+    const showMassa = document.getElementById('current-massa');
+    showMassa.innerHTML = massa;
 
-   const showMassa = document.getElementById('current-massa');
-   showMassa.innerHTML = massa;
+    sliderMassa.addEventListener('input', function(e){
+        massa = e.target.value;
+        showMassa.innerText = e.target.value;
+        //    showAtrito.classList.add("active");
+        //    showAtrito.style.left = `${e.target.value/2}%`;
+        console.log("MASSA: ", massa);
+    });
 
-   sliderMassa.addEventListener('input', function(e){
-       massa = e.target.value;
-       showMassa.innerText = e.target.value;
-    //    showAtrito.classList.add("active");
-    //    showAtrito.style.left = `${e.target.value/2}%`;
-       console.log("MASSA: ", massa);
-   });
+    sliderMassa.addEventListener("blur", function(e){
+        showMassa.classList.remove("active");
+    });
 
-   sliderMassa.addEventListener("blur", function(e){
-       showMassa.classList.remove("active");
-   });
-
-   //velocimetro
+//velocimetro
    const showVelocimetro = document.querySelector(".velocimetro");
 
    function setVelocimetroValue(velocidade, valor){
        velocidade.querySelector(".velocimetro__cover").textContent = Math.round(valor) + " m/s";
    }
 
-   
-    
-//função responsável por obter quais teclas estão sendo precionadas
-class InputHandler{
-    constructor(){
-        this.keys = [];
-        window.addEventListener('keydown', e =>{
-            if((e.key === 'ArrowDown' ||
-                e.key === 'ArrowUp' ||
-                e.key === 'ArrowLeft' ||
-                e.key === 'ArrowRight')
-                && this.keys.indexOf(e.key) === -1){
-                    this.keys.push(e.key);
-            }
-        });
-        window.addEventListener('keyup', e =>{
-            if( e.key === 'ArrowDown' ||
-                e.key === 'ArrowUp' ||
-                e.key === 'ArrowLeft' ||
-                e.key === 'ArrowRight'){
-                    this.keys.splice(this.keys.indexOf(e.key), 1);
-            }
-        });
+// funções responsaveis pelos calculos
+
+    // calculo da força peso
+    function forcaPeso(){
+        let forcaP;
+        forcaP = massa * gravidade;
+
+        return forcaP;
     }
-}
+
+    // calculo da força de atrito estatico
+    function fatEstatico(){
+        let forcaAtritoEst;
+        forcaAtritoEst = coeficienteAtritoEst * forcaPeso();
+
+        return forcaAtritoEst;
+    }
+
+    // calculo da força de atrito cinetico
+    function fatCinetico(){
+        let forcaAtritoCin;
+        forcaAtritoCin = coeficienteAtritoCin * forcaPeso();
+
+        return forcaAtritoCin;
+    }
+
+    // calculo da força resultante
+    function forcaResultante(){
+        let forcaRes;
+        forcaRes = forcaAplicada - fatCinetico();
+
+        return Math.round(forcaRes);
+    }
+
+    // calculo da aceleração
+    function aceleracao(){
+        let aceleracao;
+        aceleracao = (forcaAplicada - fatEstatico()) / massa;
+
+        return aceleracao;
+    }
+
+    function velo(){
+        let velocidade;
+        tempo = (tempo+1)/24;
+        velocidade = 0 + aceleracao() * tempo;
+
+        return velocidade;
+    }
+
+    function desaceleracao(){
+        let desaceleracao;
+        desaceleracao = forcaResultante()/massa;
+
+        console.log("DESACELERA: ", desaceleracao);
+        return desaceleracao;
+    }
+
+    // calculo de velocidade final
+    function velocidadeF(){
+        let velocidadeF;
+        velocidadeF = velocidadeIn + aceleracao() * tempo;
+
+        return velocidadeF;
+    }
+
+    // calculo do deslocamento
+    function deslocamento(){
+        let descolamento;
+        deslocamento = (deslocamentoIn + velocidadeIn * tempo + aceleracao() * Math.pow(tempo, 2)) / 2;
+
+        return descolamento;
+    }
+
+
+    function calculoMovimentacao(){
+        contador++;
+
+            if(forcaAplicada > fatEstatico()){
+                if(movimentoSuculento <= 100 && taEncostado == true && contador%24==0){
+                    movimentoSuculento += aceleracao(); 
+                    console.log(aceleracao());
+                    console.log(movimentoSuculento);
+                    setVelocimetroValue(showVelocimetro, movimentoSuculento);
+                    
+                }
+
+                document.getElementById("seta3").style.width = `${forcaResultante()}px`;
+                document.getElementById("seta3").style.height = "30px";
+                document.getElementById("seta3").style.background = "green";
+
+                document.getElementById("valorSeta2").style.fontSize = "20px";
+                document.getElementById("valorSeta2").innerText = `${forcaResultante()}N`;
+            }
+            else if(contador %24 == 0 || movimentoSuculento > 150){
+                movimentoSuculento += desaceleracao();
+
+                console.log(movimentoSuculento);
+                setVelocimetroValue(showVelocimetro, movimentoSuculento);
+
+                document.getElementById("seta3").setAttribute("style", "transform: rotate(180deg)");
+                document.getElementById("seta3").style.width = `${-forcaResultante()/5}px`;
+                document.getElementById("seta3").style.height = "30px";
+                document.getElementById("seta3").style.background = "red";
+
+                document.getElementById("valorSeta2").style.fontSize = "20px";
+                document.getElementById("valorSeta2").innerText = `${-forcaResultante()}N`;
+
+                if(movimentoSuculento <= 0){
+                    movimentoSuculento = 0;
+                    setVelocimetroValue(showVelocimetro, movimentoSuculento);
+                } 
+            }
+            return movimentoSuculento;
+    }
 
 class Background{
     constructor(image, speedModifier){
@@ -178,24 +261,31 @@ class Background{
         this.height = CANVAS_HEIGHT;
         this.x = 0;
         this.x2 = this.width;
+        this.x3 = 2*this.width;
         this.y = 0;
         this.speedModifier = speedModifier;
         this.speed = calculoMovimentacao() * this.speedModifier;
     }
     update(){
         this.speed = calculoMovimentacao() * this.speedModifier;         
-            if(this.x <= -this.width){
-                this.x = this.width + this.x2 - this.speed;
-            }
-            if(this.x2 <= -this.width){
-                this.x2 = this.width + this.x - this.speed;
-            }
-            this.x = Math.floor(this.x - this.speed);
-            this.x2 = Math.floor(this.x2 - this.speed)
+        if(this.x <= -this.width){
+            this.x = this.width + this.x2 - this.speed;
+            this.x = this.width + this.x3 - this.speed;
+        }
+        if(this.x2 <= -this.width){
+            this.x2 = this.width + this.x - this.speed;
+        }
+        if(this.x3 <= -this.width){
+            this.x3 = this.width + this.x2 - this.speed;
+        }
+        this.x = Math.floor(this.x - this.speed);
+        this.x2 = Math.floor(this.x2 - this.speed)
+        this.x3 = Math.floor(this.x3 - this.speed)
     }
     draw(){
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
         ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+        ctx.drawImage(this.image, this.x3, this.y, this.width, this.height);
     }
 }
 
@@ -213,7 +303,7 @@ class Box{
 }
 class Robot{
     constructor(image){
-        this.width = 217;
+        this.width = 170;
         this.height = 200;
         this.x = 0;
         this.y = CANVAS_HEIGHT - 450;
@@ -253,120 +343,28 @@ class Robot{
     }    
 }
 
-// funções responsaveis pelos calculos
-
-// calculo da força peso
-function forcaPeso(){
-    let forcaP;
-    forcaP = massa * gravidade;
-
-    return forcaP;
-}
-
-// calculo da força de atrito estatico
-function fatEstatico(){
-    let forcaAtritoEst;
-    forcaAtritoEst = coeficienteAtritoEst * forcaPeso();
-
-    return forcaAtritoEst;
-}
-
-// calculo da força de atrito cinetico
-function fatCinetico(){
-    let forcaAtritoCin;
-    forcaAtritoCin = coeficienteAtritoCin * forcaPeso();
-
-    return forcaAtritoCin;
-}
-
-// calculo da força resultante
-function forcaResultante(){
-    let forcaRes;
-    forcaRes = forcaAplicada - fatCinetico();
-
-    return Math.round(forcaRes);
-}
-
-// calculo da aceleração
-function aceleracao(){
-    let aceleracao;
-    aceleracao = (forcaAplicada - fatEstatico()) / massa;
-
-    return aceleracao;
-}
-
-function velo(){
-    let velocidade;
-    tempo = (tempo+1)/24;
-    velocidade = 0 + aceleracao() * tempo;
-
-    return velocidade;
-}
-
-function desaceleracao(){
-    let desaceleracao;
-    desaceleracao = forcaResultante()/massa;
-
-    console.log("DESACELERA: ", desaceleracao);
-    return desaceleracao;
-}
-
-// calculo de velocidade final
-function velocidadeF(){
-    let velocidadeF;
-    velocidadeF = velocidadeIn + aceleracao() * tempo;
-
-    return velocidadeF;
-}
-
-// calculo do deslocamento
-function deslocamento(){
-    let descolamento;
-    deslocamento = (deslocamentoIn + velocidadeIn * tempo + aceleracao() * Math.pow(tempo, 2)) / 2;
-
-    return descolamento;
-}
-
-
-function calculoMovimentacao(){
-    contador++;
-
-        if(forcaAplicada > fatEstatico()){
-            if(movimentoSuculento <= 100 && taEncostado == true && contador%24==0){
-                movimentoSuculento += aceleracao(); 
-                console.log(aceleracao());
-                console.log(movimentoSuculento);
-                setVelocimetroValue(showVelocimetro, movimentoSuculento);
-                
+//função responsável por obter quais teclas estão sendo precionadas
+class InputHandler{
+    constructor(){
+        this.keys = [];
+        window.addEventListener('keydown', e =>{
+            if((e.key === 'ArrowDown' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'ArrowRight')
+                && this.keys.indexOf(e.key) === -1){
+                    this.keys.push(e.key);
             }
-
-            document.getElementById("seta3").style.width = `${forcaResultante()}px`;
-            document.getElementById("seta3").style.height = "30px";
-            document.getElementById("seta3").style.background = "green";
-
-            document.getElementById("valorSeta2").style.fontSize = "20px";
-            document.getElementById("valorSeta2").innerText = `${forcaResultante()}N`;
-        }
-        else if(contador %24 == 0 || movimentoSuculento > 150){
-            movimentoSuculento += desaceleracao();
-
-            console.log(movimentoSuculento);
-            setVelocimetroValue(showVelocimetro, movimentoSuculento);
-
-            document.getElementById("seta3").setAttribute("style", "transform: rotate(180deg)");
-            document.getElementById("seta3").style.width = `${-forcaResultante()/5}px`;
-            document.getElementById("seta3").style.height = "30px";
-            document.getElementById("seta3").style.background = "red";
-
-            document.getElementById("valorSeta2").style.fontSize = "20px";
-            document.getElementById("valorSeta2").innerText = `${-forcaResultante()}N`;
-
-            if(movimentoSuculento <= 0){
-                movimentoSuculento = 0;
-                setVelocimetroValue(showVelocimetro, movimentoSuculento);
-            } 
-        }
-        return movimentoSuculento;
+        });
+        window.addEventListener('keyup', e =>{
+            if( e.key === 'ArrowDown' ||
+                e.key === 'ArrowUp' ||
+                e.key === 'ArrowLeft' ||
+                e.key === 'ArrowRight'){
+                    this.keys.splice(this.keys.indexOf(e.key), 1);
+            }
+        });
+    }
 }
 
 const input = new InputHandler();
@@ -378,7 +376,6 @@ const box = new Box(boxImage);
 const robot = new Robot(robotImage);
 
 const gameBackground = [background, tower, floor, layer];
-
 
 function start(){
     ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -417,5 +414,4 @@ function animate(){
         requestAnimationFrame(animate);
     }
 }
-
 start();
