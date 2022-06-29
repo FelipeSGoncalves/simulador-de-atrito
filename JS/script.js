@@ -1,4 +1,3 @@
-
 /** @type {HTMLCanvasElement} */
 
 canvas = document.getElementById("canvas");
